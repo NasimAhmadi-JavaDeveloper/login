@@ -12,6 +12,9 @@ public interface UserMapper {
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "createdBy", ignore = true)
+  @Mapping(target = "locked", ignore = true)
+  @Mapping(target = "lockTime", ignore = true)
+  @Mapping(target = "failedLoginAttempts", ignore = true)
   @Mapping(target = "password", source = "password")
   User toEntity(UserRequest request, String password);
 

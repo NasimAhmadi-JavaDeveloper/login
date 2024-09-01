@@ -16,13 +16,25 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
 
     public LoginResponse login(String userName, String password) {
         return userRepository.findByUserName(userName)
-                .filter(entity -> passwordEncoder.matches(password, entity.getPassword()))
-                .map(entity -> new LoginResponse(jwtService.generateEncodeAccessToken(entity)))
-                .orElseThrow(() -> new LogicalException(ExceptionSpec.UN_AUTHORIZED));
+                .map(user -> {
+                    if (user.isLocked() && !userService.unlockWhenTimeExpired(user)) {
+                        throw new LogicalException(ExceptionSpec.USER_LOCKED);
+                    }
+
+                    if (passwordEncoder.matches(password, user.getPassword())) {
+                        userService.resetFailedAttempts(userName);
+                        String token = jwtService.generateEncodeAccessToken(user);
+                        return new LoginResponse(token);
+                    } else {
+                        userService.loginFailed(user);
+                        throw new LogicalException(ExceptionSpec.UN_AUTHORIZED);
+                    }
+                }).orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
     }
 }
