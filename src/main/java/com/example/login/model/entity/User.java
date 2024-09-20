@@ -29,7 +29,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String phone;
     @Column(nullable = false)
-    private String password;
+    private char[] password;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
@@ -38,8 +38,5 @@ public class User {
     private String createdBy;
     @Column(nullable = false)
     private int failedLoginAttempts;
-    @Column(nullable = false)
-    private boolean locked;
-    @Column
-    private LocalDateTime lockTime;
+    private LocalDateTime lockTimeDuration;
 }

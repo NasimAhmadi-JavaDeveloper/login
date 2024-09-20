@@ -22,7 +22,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     public static final int MAX_FAILED_ATTEMPTS = 3;
-    private static final long LOCK_TIME_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
+    private static final long LOCK_TIME_DURATION_SECONDS = 30 * 60;
     private static final int ZERO = 0;
 
     public void addUser(UserRequest request) {
@@ -48,8 +48,7 @@ public class UserService {
         user.setFailedLoginAttempts(newFailAttempts);
 
         if (newFailAttempts >= MAX_FAILED_ATTEMPTS) {
-            user.setLocked(true);
-            user.setLockTime(LocalDateTime.now());
+            user.setLockTimeDuration(LocalDateTime.now().plusMinutes(30));
         }
 
         userRepository.save(user);
@@ -59,25 +58,28 @@ public class UserService {
         Optional<User> user = userRepository.findByUserName(username);
         user.ifPresent(u -> {
             u.setFailedLoginAttempts(ZERO);
-            u.setLocked(false);
-            u.setLockTime(null);
+            u.setLockTimeDuration(null);
             userRepository.save(u);
         });
     }
 
     public boolean unlockWhenTimeExpired(User user) {
-        if (user.isLocked() && user.getLockTime() != null) {
-            LocalDateTime lockTime = user.getLockTime();
+        if (user.getLockTimeDuration() != null) {
+            LocalDateTime lockTime = user.getLockTimeDuration();
             LocalDateTime now = LocalDateTime.now();
 
-            if (lockTime.plusMinutes(LOCK_TIME_DURATION).isBefore(now)) {
-                user.setLocked(false);
-                user.setLockTime(null);
+            if (lockTime.plusSeconds(LOCK_TIME_DURATION_SECONDS).isBefore(now)) {
+                user.setLockTimeDuration(null);
                 user.setFailedLoginAttempts(ZERO);
                 userRepository.save(user);
                 return true;
             }
         }
         return false;
+    }
+
+    public User getUserByName(String userName) {
+        return userRepository.findByUserName(userName)
+                .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
     }
 }

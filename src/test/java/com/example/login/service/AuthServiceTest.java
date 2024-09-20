@@ -16,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -46,71 +45,104 @@ class AuthServiceTest {
     }
 
     @Test
-    public void login_SuccessfulLogin_ReturnsToken() {
+    public void successfulLogin_ReturnsToken() {
 
-        //GIVEN
+        //GIVEN Entity
         user = new User();
-        user.setUserName("testUser");
-        user.setPassword("1375");
+        user.setUserName("nasim");
+        user.setPassword("1375".toCharArray());
         user.setFailedLoginAttempts(0);
-        user.setLocked(false);
-        user.setLockTime(null);
+        user.setLockTimeDuration(null);
+
+        //GIVEN DTO
+        String sentUserName = "nasim";
+        char[] sentPassword = "1375".toCharArray();
 
         //WHEN
-        when(userRepository.findByUserName("testUser")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("password", "1375")).thenReturn(true);
-        when(jwtService.generateEncodeAccessToken(user)).thenReturn("jwtToken");
-        LoginResponse response = authService.login("testUser", "password");
+        when(userService.getUserByName(sentUserName))
+                .thenReturn(user);
+
+        when(userService.unlockWhenTimeExpired(user))
+                .thenReturn(true);
+
+        when(passwordEncoder.matches(String.valueOf(sentPassword), String.valueOf(user.getPassword())))
+                .thenReturn(true);
+
+        when(jwtService.generateEncodeAccessToken(user))
+                .thenReturn("jwtToken");
+
+        LoginResponse response = authService.login(user.getUserName(), sentPassword);
 
         //THEN
         assertNotNull(response);
         assertEquals("jwtToken", response.getAccessToken());
-        verify(userService).resetFailedAttempts("testUser");
+        verify(userService).resetFailedAttempts(sentUserName);
         verify(userService, never()).loginFailed(any());
     }
 
     @Test
-    public void login_UserLocked_ThrowsLogicalException() {
+    public void userLocked_ThrowsUserLockedException() {
 
-        //GIVEN
+        //GIVEN Entity
         user = new User();
-        user.setUserName("testUser");
-        user.setPassword("1375");
+        user.setUserName("nasim");
+        user.setPassword("1375".toCharArray());
         user.setFailedLoginAttempts(0);
-        user.setLocked(true);
-        user.setLockTime(LocalDateTime.now().minusMinutes(10));
+        user.setLockTimeDuration(LocalDateTime.now().minusMinutes(10));
+
+        //GIVEN DTO
+        String sentUserName = "nasim";
+        char[] sentPassword = "1375".toCharArray();
 
         //WHEN
-        when(userRepository.findByUserName("testUser")).thenReturn(Optional.of(user));
-        when(userService.unlockWhenTimeExpired(user)).thenReturn(false);
-        LogicalException thrown = assertThrows(LogicalException.class, () ->
-                authService.login("testUser", "password")
+        when(userService.getUserByName(sentUserName))
+                .thenReturn(user);
+
+        when(userService.unlockWhenTimeExpired(user))
+                .thenReturn(false);
+
+        LogicalException thrown = assertThrows(LogicalException.class,
+                () -> authService.login(user.getUserName(), sentPassword)
         );
 
         //THEN
         assertEquals(ExceptionSpec.USER_LOCKED.getMessage(), thrown.getMessage());
-        verify(userService, never()).resetFailedAttempts("testUser");
-        verify(jwtService, never()).generateEncodeAccessToken(user);
-        verify(userService, never()).loginFailed(user);
+        verify(userService, never())
+                .resetFailedAttempts(sentUserName);
+
+        verify(jwtService, never())
+                .generateEncodeAccessToken(user);
+
+        verify(userService, never())
+                .loginFailed(user);
     }
 
     @Test
-    public void login_InvalidPassword_ThrowsLogicalException() {
+    public void invalidPassword_ThrowsUnauthorizedException() {
 
-        //GIVEN
+        //GIVEN Entity
         user = new User();
-        user.setUserName("testUser");
-        user.setPassword("1375");
-        user.setFailedLoginAttempts(0);
-        user.setLocked(false);
-        user.setLockTime(null);
+        user.setUserName("nasim");
+        user.setPassword("1375".toCharArray());
+        user.setFailedLoginAttempts(2);
+        user.setLockTimeDuration(null);
+
+        //GIVEN DTO
+        String sentUserName = "nasim";
+        char[] sentPassword = "55889966".toCharArray();
 
         //WHEN
-        when(userRepository.findByUserName("testUser")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("wrongPassword", user.getPassword())).thenReturn(false);
+        when(userService.getUserByName(sentUserName))
+                .thenReturn(user);
 
-        LogicalException thrown = assertThrows(LogicalException.class, () ->
-                authService.login("testUser", "wrongPassword")
+        when(userService.unlockWhenTimeExpired(user))
+                .thenReturn(true);
+
+        when(passwordEncoder.matches(String.valueOf(sentPassword), String.valueOf(user.getPassword())))
+                .thenReturn(false);
+
+        LogicalException thrown = assertThrows(LogicalException.class,
+                () -> authService.login(user.getUserName(), sentPassword)
         );
 
         //THEN
@@ -119,42 +151,38 @@ class AuthServiceTest {
     }
 
     @Test
-    public void login_UserNotFound_ThrowsUserNotFoundException() {
+    public void userLockedButUnlockSuccess_UnlocksAndLogIn() {
 
-        //WHEN
-        when(userRepository.findByUserName("testUser")).thenReturn(Optional.empty());
-        LogicalException thrown = assertThrows(LogicalException.class,
-                () -> authService.login("testUser", "password")
-        );
-
-        //THEN
-        assertEquals(ExceptionSpec.USER_NOT_FOUND.getMessage(), thrown.getMessage());
-        verify(userService, never()).resetFailedAttempts(any());
-        verify(userService, never()).loginFailed(any());
-    }
-
-    @Test
-    public void login_UserLockedButUnlockSuccess_UnlocksAndLogsIn() {
-
-        //GIVEN
-        user = new User();
-        user.setUserName("testUser");
-        user.setPassword("1375");
+        //GIVEN Entity
+        User user = new User();
+        user.setUserName("nasim");
+        user.setPassword("1375".toCharArray());
         user.setFailedLoginAttempts(3);
-        user.setLocked(true);
-        user.setLockTime(LocalDateTime.now().minusMinutes(40));
+        user.setLockTimeDuration(LocalDateTime.now().minusMinutes(40));
+
+        //GIVEN DTO
+        String sentUserName = "nasim";
+        char[] sentPassword = "1375".toCharArray();
 
         //WHEN
-        when(userRepository.findByUserName("testUser")).thenReturn(Optional.of(user));
-        when(userService.unlockWhenTimeExpired(user)).thenReturn(true);
-        when(passwordEncoder.matches("1375", user.getPassword())).thenReturn(true);
+        when(userService.getUserByName(sentUserName))
+                .thenReturn(user);
+
+        when(userService.unlockWhenTimeExpired(user))
+                .thenReturn(true);
+
+        when(passwordEncoder.matches(String.valueOf(sentPassword), String.valueOf(user.getPassword())))
+                .thenReturn(true);
+
         when(jwtService.generateEncodeAccessToken(user)).thenReturn("jwtToken");
-        LoginResponse response = authService.login("testUser", user.getPassword());
+        LoginResponse response = authService.login(sentUserName, sentPassword);
 
         //THEN
         assertNotNull(response);
         assertEquals("jwtToken", response.getAccessToken());
-        verify(userService).resetFailedAttempts("testUser");
+        verify(userService).resetFailedAttempts(sentUserName);
+        verify(jwtService).generateEncodeAccessToken(user);
         verify(userService, never()).loginFailed(any());
     }
+
 }

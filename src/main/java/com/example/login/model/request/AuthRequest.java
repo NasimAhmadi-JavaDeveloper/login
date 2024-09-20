@@ -11,5 +11,5 @@ public class AuthRequest {
     @NotEmpty(message = "user name is required")
     private String userName;
     @NotEmpty(message = "password is required")
-    private String password;
+    private char[] password;
 }
