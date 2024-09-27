@@ -2,6 +2,7 @@ package com.example.login.exception;
 
 import com.example.login.model.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +16,12 @@ public class ExceptionHandling extends ResponseEntityExceptionHandler {
     public Object handleBusinessExceptions(LogicalException e) {
         log.warn("Business Error Occurred! {}", e.getMessage());
         return createErrorResponse(e);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public Object handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        log.warn("Uk exception Occurred! {}", e.getMessage());
+        return mapException(e);
     }
 
     @ExceptionHandler(Throwable.class)

@@ -7,12 +7,14 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Setter
 @Getter
 @Accessors(chain = true)
 public class UserRequest {
+    private Integer id;
     @NotEmpty(message = "user name is required")
     private String userName;
     @NotEmpty(message = "password is required")
@@ -21,6 +23,6 @@ public class UserRequest {
     private String email;
     @Pattern(regexp = "9\\d{10}", message = "invalid phone")
     private String phone;
-    @NotEmpty(message = "role is required")
+    @NotNull(message = "role is required")
     private Role role;
 }

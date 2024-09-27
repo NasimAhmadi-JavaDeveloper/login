@@ -10,6 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -22,27 +25,21 @@ public class AuthService {
     public LoginResponse login(String userName, char[] password) {
         User user = userService.getUserByName(userName);
 
-        try {
-            if (!userService.unlockWhenTimeExpired(user)) {
-                throw new LogicalException(ExceptionSpec.USER_LOCKED);
-            }
-
-            if (passwordEncoder.matches(String.valueOf(password), String.valueOf(user.getPassword()))) {
-                userService.resetFailedAttempts(userName);
-                String token = jwtService.generateEncodeAccessToken(user);
-                return new LoginResponse(token);
-            } else {
-                userService.loginFailed(user);
-                throw new LogicalException(ExceptionSpec.UN_AUTHORIZED);
-            }
-        } finally {
-            clearPassword(password);
+        if (Objects.nonNull(user.getLockTimeDuration())
+                && LocalDateTime.now().isBefore(user.getLockTimeDuration())) {
+            throw new LogicalException(ExceptionSpec.USER_LOCKED);
         }
-    }
 
-    private void clearPassword(char[] password) {
-        if (password != null) {
-            java.util.Arrays.fill(password, '\0');
+        if (passwordEncoder.matches(String.valueOf(password), String.valueOf(user.getPassword()))) {
+            userService.resetFailedAttempts(userName);
+            String token = jwtService.generateEncodeAccessToken(user);
+            return new LoginResponse(token);
+        } else {
+            //to use LOCKS, all methods needs to be transactional
+            //but this one should not roll back on the error after
+            userService.loginFailed(user);
+            throw new LogicalException(ExceptionSpec.UN_AUTHORIZED);
         }
+
     }
 }

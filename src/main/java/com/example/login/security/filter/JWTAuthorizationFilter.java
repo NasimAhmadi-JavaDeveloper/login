@@ -32,6 +32,12 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                                     HttpServletResponse res,
                                     FilterChain chain) throws IOException, ServletException {
 
+//        if ("TRACE".equalsIgnoreCase(req.getMethod())
+//                || "TRACK".equalsIgnoreCase(req.getMethod())) {
+//            res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+//            return;
+//        }
+
         String header = req.getHeader(HEADER_STRING);
         if (header != null && header.startsWith(TOKEN_PREFIX)) {
             UsernamePasswordAuthenticationToken authentication = getAuthentication(req);

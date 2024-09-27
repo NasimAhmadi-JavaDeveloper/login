@@ -62,7 +62,7 @@ class AuthServiceTest {
         when(userService.getUserByName(sentUserName))
                 .thenReturn(user);
 
-        when(userService.unlockWhenTimeExpired(user))
+        when(userService.isUserLocked(user))
                 .thenReturn(true);
 
         when(passwordEncoder.matches(String.valueOf(sentPassword), String.valueOf(user.getPassword())))
@@ -98,7 +98,7 @@ class AuthServiceTest {
         when(userService.getUserByName(sentUserName))
                 .thenReturn(user);
 
-        when(userService.unlockWhenTimeExpired(user))
+        when(userService.isUserLocked(user))
                 .thenReturn(false);
 
         LogicalException thrown = assertThrows(LogicalException.class,
@@ -135,7 +135,7 @@ class AuthServiceTest {
         when(userService.getUserByName(sentUserName))
                 .thenReturn(user);
 
-        when(userService.unlockWhenTimeExpired(user))
+        when(userService.isUserLocked(user))
                 .thenReturn(true);
 
         when(passwordEncoder.matches(String.valueOf(sentPassword), String.valueOf(user.getPassword())))
@@ -168,7 +168,7 @@ class AuthServiceTest {
         when(userService.getUserByName(sentUserName))
                 .thenReturn(user);
 
-        when(userService.unlockWhenTimeExpired(user))
+        when(userService.isUserLocked(user))
                 .thenReturn(true);
 
         when(passwordEncoder.matches(String.valueOf(sentPassword), String.valueOf(user.getPassword())))
