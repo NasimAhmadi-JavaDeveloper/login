@@ -4,13 +4,17 @@ import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
 import com.example.login.mapper.UserMapper;
 import com.example.login.model.entity.User;
+import com.example.login.model.request.PatchUserRequest;
 import com.example.login.model.request.UserRequest;
 import com.example.login.model.response.UserResponse;
 import com.example.login.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,10 +26,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
-
+    private final UserRepository userRepository;
+    private final SaveUserService saveUserService;
+    private final DeleteUserService deleteUserService;
+    private final UpdateUserService updateUserService;
     @Value("${security.max-failed-attempts:3}")
     public int maxFailedAttempts;
     @Value("${security.lock-time-duration-seconds:1800}")
@@ -39,18 +44,28 @@ public class UserService {
                 });
 
         if (Objects.isNull(request.getId())) {
-            User user = userMapper.toEntity(request, passwordEncoder.encode(request.getPassword()));
-            userRepository.save(user);
+            saveUserService.saveUser(request);
         } else {
-            User user = userRepository.findById(request.getId())
-                    .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
-            user.setUserName(request.getUserName());
-            user.setPassword(passwordEncoder.encode(request.getPassword()).toCharArray());
-            user.setEmail(request.getEmail());
-            user.setPhone(request.getPhone());
-            user.setRole(request.getRole());
-            userRepository.save(user);
+            updateUserService.updateUser(request);
         }
+    }
+
+    public void deleteUser(Integer id) {
+        deleteUserService.deleteUser(id);
+    }
+
+    @Cacheable(value = "userById", key = "#id", unless = "#result == null")
+    public UserResponse findById(Integer id) {
+        return userRepository.findById(id)
+                .map(userMapper::toResponse)
+                .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
+    }
+
+    @Cacheable(value = "userByEmail", key = "#email", unless = "#result == null")
+    public UserResponse findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(userMapper::toResponse)
+                .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
     }
 
     public UserResponse getCurrentUser(Integer id) {
@@ -101,4 +116,13 @@ public class UserService {
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
     }
 
+    public void patchUser(Integer id, String json) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper()
+                .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
+        mapper.readValue(json, PatchUserRequest.class);
+        mapper.readerForUpdating(user).readValue(json);
+        userRepository.save(user);
+    }
 }
