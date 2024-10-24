@@ -1,5 +1,6 @@
 package com.example.login.config;
 
+import com.example.login.model.response.UserResponse;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,14 +14,24 @@ import java.time.Duration;
 
 @Configuration
 public class CacheConfig {
-    @Bean
-    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+     @Bean
+      public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
 
-        return RedisCacheManager.builder(redisConnectionFactory)
-                .withCacheConfiguration("userById", config.entryTtl(Duration.ofHours(11111111)))
-                .withCacheConfiguration("userByEmail", config.entryTtl(Duration.ofHours(11111111)))
-                .build();
-    }
+         RedisCacheConfiguration userByIdConfig = RedisCacheConfiguration
+                 .defaultCacheConfig()
+                 .entryTtl(Duration.ofHours(11111111))
+                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                         new GenericJackson2JsonRedisSerializer()));
+
+         RedisCacheConfiguration userByEmailConfig = RedisCacheConfiguration
+                 .defaultCacheConfig()
+                 .entryTtl(Duration.ofHours(11111111))
+                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                         new ProtostuffRedisSerializer<>(UserResponse.class)));
+
+         return RedisCacheManager.builder(redisConnectionFactory)
+                 .withCacheConfiguration("userById", userByIdConfig)
+                 .withCacheConfiguration("userByEmail", userByEmailConfig)
+                 .build();
+     }
 }
