@@ -16,13 +16,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Optional;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserService {
 
@@ -31,8 +32,6 @@ public class UserService {
     private final SaveUserService saveUserService;
     private final DeleteUserService deleteUserService;
     private final UpdateUserService updateUserService;
-    @Value("${security.max-failed-attempts:3}")
-    public int maxFailedAttempts;
     @Value("${security.lock-time-duration-seconds:1800}")
     public long lockTimeDurationSeconds;
     private static final int ZERO = 0;
@@ -75,26 +74,6 @@ public class UserService {
     public User getUser(Integer userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
-    }
-
-    public void loginFailed(User user) {
-        int newFailAttempts = user.getFailedLoginAttempts() + 1;
-        user.setFailedLoginAttempts(newFailAttempts);
-
-        if (newFailAttempts >= maxFailedAttempts) {
-            user.setLockTimeDuration(LocalDateTime.now().plusSeconds(lockTimeDurationSeconds));
-        }
-
-        userRepository.save(user);
-    }
-
-    public void resetFailedAttempts(String username) {
-        Optional<User> user = userRepository.findByUserName(username);
-        user.ifPresent(u -> {
-            u.setFailedLoginAttempts(ZERO);
-            u.setLockTimeDuration(null);
-            userRepository.save(u);
-        });
     }
 
     public boolean isUserLocked(User user) {
