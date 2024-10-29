@@ -19,13 +19,13 @@ public class CacheConfig {
 
          RedisCacheConfiguration userByIdConfig = RedisCacheConfiguration
                  .defaultCacheConfig()
-                 .entryTtl(Duration.ofHours(11111111))
+                 .entryTtl(Duration.ofHours(24))
                  .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
                          new GenericJackson2JsonRedisSerializer()));
 
          RedisCacheConfiguration userByEmailConfig = RedisCacheConfiguration
                  .defaultCacheConfig()
-                 .entryTtl(Duration.ofHours(11111111))
+                 .entryTtl(Duration.ofMinutes(30))
                  .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
                          new ProtostuffRedisSerializer<>(UserResponse.class)));
 
