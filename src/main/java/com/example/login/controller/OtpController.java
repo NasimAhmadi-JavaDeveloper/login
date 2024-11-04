@@ -1,12 +1,10 @@
 package com.example.login.controller;
 
 import com.example.login.model.response.OtpResponse;
+import com.example.login.model.response.VerifyResponse;
 import com.example.login.service.OtpService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,8 +18,8 @@ public class OtpController {
         return otpService.sendOtp(email);
     }
 
-//    @PostMapping("/verify-otp")
-//    public VerifyResponse verifyOtp(@RequestParam String otp) {
-//        return otpService.verifyAndSendToken(otp);
-//    }
+    @PostMapping("/verify-otp")
+    public VerifyResponse verifyOtp(@RequestParam String otp) {
+        return otpService.verifyAndSendToken(otp);
+    }
 }

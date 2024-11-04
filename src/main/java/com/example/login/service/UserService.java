@@ -76,8 +76,8 @@ public class UserService {
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
     }
 
-    public User getUserByEmail(int userId, String email) {
-        return userRepository.findByIdAndEmail(userId, email)
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
     }
 
@@ -108,32 +108,5 @@ public class UserService {
         mapper.readValue(json, PatchUserRequest.class);
         mapper.readerForUpdating(user).readValue(json);
         userRepository.save(user);
-    }
-
-//    public Integer createUserIfEmailNotExists(String email) {
-//        boolean b = userRepository.existsByEmail(email);
-//        if(b){
-//            User user = userRepository.findByEmail(email).get();
-//
-//        }
-//
-//        if (!) {
-//            User entity = User.builder()
-//                    .email(email)
-//                    .role(Role.ROLE_USER)
-//                    .phone("95178308197")
-//                    .userName("system")
-//                    .password("system".toCharArray())
-//                    .failedLoginAttempts(ZERO)
-//                    .build();
-//            User saved = userRepository.save(entity);
-//            return saved.getId();
-//        }
-//    }
-
-    public String getUserEmailById(int userId) {
-        return userRepository.findById(userId)
-                .map(User::getEmail)
-                .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
     }
 }

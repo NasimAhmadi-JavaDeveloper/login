@@ -21,6 +21,8 @@ public enum ExceptionSpec {
     PASSWORD_NOT_EMPTY("Invalid phone number format", HttpStatus.BAD_REQUEST),
     EXPIRE_OTP("OTP code has expired", HttpStatus.BAD_REQUEST),
     OTP_NOT_FOUND("OTP does not exist for this user", HttpStatus.BAD_REQUEST),
+    INVALID_OTP("The OTP code has expired", HttpStatus.BAD_REQUEST),
+
 
     ;
     private final String message;

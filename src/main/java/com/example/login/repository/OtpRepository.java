@@ -24,4 +24,7 @@ public interface OtpRepository extends JpaRepository<Otp, Integer> {
                                @Param("expirationTime") LocalDateTime expirationTime,
                                @Param("otpCode") String otpCode,
                                @Param("newOtpRequestCount") int newOtpRequestCount);
+
+    Optional<Otp> findByOtpCode(String otpCode);
+
 }

@@ -4,7 +4,9 @@ import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
 import com.example.login.exception.OtpEmailException;
 import com.example.login.model.entity.Otp;
+import com.example.login.model.entity.User;
 import com.example.login.model.response.OtpResponse;
+import com.example.login.model.response.VerifyResponse;
 import com.example.login.repository.OtpRepository;
 import com.example.login.security.JWTService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +33,6 @@ public class OtpService {
     private static final int LOCK_TIME_MIN = 5;
     private static final int DEFAULT_REQUEST_COUNT = 1;
     private static final int OTP_EXPIRATION_MINUTES = 1;
-    private static final int MAX_FAILED_ATTEMPT_OTP = 3;
     private static final int MAX_OTP_REQUESTS_PER_HOUR = 5;
     private static final int DEFAULT_FAILED_OTP_ATTEMPT = 0;
 
@@ -61,7 +62,7 @@ public class OtpService {
                 .lockTimeDuration(null)
                 .build();
         otpRepository.save(entity);
-        sendOtpToEmail(email,otpCode);
+        sendOtpToEmail(email, otpCode);
         return otpCode;
     }
 
@@ -86,7 +87,7 @@ public class OtpService {
         String otpCode = generateOtpCode();
 
         otpRepository.updateOtp(id, expirationTime, otpCode, newOtpRequestCount);
-        sendOtpToEmail(otp.getEmail(),otpCode);
+        sendOtpToEmail(otp.getEmail(), otpCode);
         return new OtpResponse(otpCode);
     }
 
@@ -108,6 +109,31 @@ public class OtpService {
         return String.valueOf(min + new Random().nextInt(max - min + 1));
     }
 
+    public VerifyResponse verifyAndSendToken(String otp) {
+        Otp otpEntity = otpRepository.findByOtpCode(otp)
+                .orElseThrow(() -> new LogicalException(ExceptionSpec.INVALID_OTP));
+
+        if (isOtpExpired(otpEntity)) {
+            throw new LogicalException(ExceptionSpec.EXPIRE_OTP);
+        }
+
+        if (isUserLocked(otpEntity)) {
+            throw new LogicalException(ExceptionSpec.USER_LOCKED);
+        }
+
+        resetFailedAttemptsIfLockExpired(otpEntity);
+
+        return generateToken(otpEntity);
+    }
+
+    private VerifyResponse generateToken(Otp otpEntity) {
+        String email = otpEntity.getEmail();
+        User user = userService.getUserByEmail(email);
+        String token = jwtService.generateEncodeAccessToken(user);
+        return VerifyResponse.builder()
+                .token(token)
+                .build();
+    }
 
     private boolean isOtpExpired(Otp otpEntity) {
         return otpEntity.getExpirationTime().isBefore(LocalDateTime.now());
@@ -125,25 +151,6 @@ public class OtpService {
             otpEntity.setLockTimeDuration(null);
             otpRepository.save(otpEntity);
         }
-    }
-
-    private void incrementFailedAttempts(Otp otpEntity) {
-        int updatedFailedAttempts = otpEntity.getFailedOtpAttempts() + 1;
-
-        if (updatedFailedAttempts >= MAX_FAILED_ATTEMPT_OTP) {
-            lockUser(otpEntity, updatedFailedAttempts);
-            throw new LogicalException(ExceptionSpec.USER_LOCKED);
-        } else {
-            otpEntity.setFailedOtpAttempts(updatedFailedAttempts);
-            otpRepository.save(otpEntity);
-            throw new LogicalException(ExceptionSpec.UN_AUTHORIZED);
-        }
-    }
-
-    private void lockUser(Otp otpEntity, int failedAttempts) {
-        otpEntity.setFailedOtpAttempts(failedAttempts);
-        otpEntity.setLockTimeDuration(LocalDateTime.now().plusMinutes(LOCK_TIME_MIN));
-        otpRepository.save(otpEntity);
     }
 
     private void sendOtpToEmail(String email, String otpCode) {
