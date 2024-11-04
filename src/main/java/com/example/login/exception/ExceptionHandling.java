@@ -3,6 +3,7 @@ package com.example.login.exception;
 import com.example.login.model.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +28,12 @@ public class ExceptionHandling extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Throwable.class)
     public Object handleUnhandled(Exception e) {
         return mapException(e);
+    }
+
+    @ExceptionHandler(OtpEmailException.class)
+    public ResponseEntity<String> handleOtpEmailException(OtpEmailException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error occurred while sending OTP email: " + ex.getMessage());
     }
 
     private ResponseEntity<ErrorResponse> createErrorResponse(LogicalException e) {

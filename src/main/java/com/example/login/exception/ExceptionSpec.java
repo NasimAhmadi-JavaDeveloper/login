@@ -19,6 +19,8 @@ public enum ExceptionSpec {
     EMAIL_NOT_EMPTY("Invalid email format or cannot be null or empty", HttpStatus.BAD_REQUEST),
     PHONE_NOT_EMPTY("Invalid phone number format", HttpStatus.BAD_REQUEST),
     PASSWORD_NOT_EMPTY("Invalid phone number format", HttpStatus.BAD_REQUEST),
+    EXPIRE_OTP("OTP code has expired", HttpStatus.BAD_REQUEST),
+    OTP_NOT_FOUND("OTP does not exist for this user", HttpStatus.BAD_REQUEST),
 
     ;
     private final String message;

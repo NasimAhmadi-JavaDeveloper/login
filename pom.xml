@@ -20,6 +20,7 @@
         <springdoc-openapi.version>1.6.14</springdoc-openapi.version>
         <protostuff.version>1.7.4</protostuff.version>
         <mysql-connector.version>8.0.24</mysql-connector.version>
+        <java.mail.version>1.5.5</java.mail.version>
     </properties>
     <dependencies>
         <dependency>
@@ -95,6 +96,11 @@
             <groupId>io.protostuff</groupId>
             <artifactId>protostuff-runtime</artifactId>
             <version>${protostuff.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>${java.mail.version}</version>
         </dependency>
     </dependencies>
     <build>

@@ -2,9 +2,7 @@ package com.example.login.model.entity;
 
 import com.example.login.enumeration.Role;
 import com.example.login.model.converter.CryptoConverter;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -14,19 +12,22 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "users")
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(nullable = false, unique = true)
     private String userName;
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
     @Convert(converter = CryptoConverter.class)
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String phone;
     @Column(nullable = false)
     private char[] password;
@@ -37,6 +38,6 @@ public class User {
     @CreatedBy
     private String createdBy;
     @Column(nullable = false)
-    private int failedLoginAttempts;
+    private Integer failedLoginAttempts;
     private LocalDateTime lockTimeDuration;
 }
