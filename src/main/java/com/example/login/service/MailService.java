@@ -19,6 +19,8 @@ public class MailService {
     @Value("${otp.email.message}")
     private String otpEmailMessage;
     private final MailSender mailSender;
+    @Value("${otp.forget.password.message}")
+    private String forgetPasswordSubject;
 
     @Retryable(
             value = {MailException.class},
@@ -29,6 +31,28 @@ public class MailService {
         message.setTo(email);
         message.setSubject(otpEmailSubject);
         message.setText(String.format(otpEmailMessage, otpCode, otpExpirationMinutes));
+
+        try {
+            mailSender.send(message);
+        } catch (MailAuthenticationException e) {
+            throw new OtpEmailException("Authentication failed while sending OTP email", e);
+        } catch (MailSendException e) {
+            throw new OtpEmailException("Failed to send OTP email", e);
+        } catch (MailException e) {
+            throw new OtpEmailException("An error occurred while sending OTP email", e);
+        }
+    }
+
+    @Retryable(
+            value = {MailException.class},
+            backoff = @Backoff(delay = 2000)
+    )
+    public void sendOtpForgetPassword(String email, String otpCode, String resetLink) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject(forgetPasswordSubject);
+        String messageText = String.format(otpEmailMessage, otpCode, otpExpirationMinutes) + "Click here to reset: " + resetLink;
+        message.setText(messageText);
 
         try {
             mailSender.send(message);

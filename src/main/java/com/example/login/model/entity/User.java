@@ -3,6 +3,7 @@ package com.example.login.model.entity;
 import com.example.login.enumeration.Role;
 import com.example.login.model.converter.CryptoConverter;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -41,5 +42,6 @@ public class User {
     private Integer failedLoginAttempts;
     private LocalDateTime lockTimeDuration;
     @Version
+    @ColumnDefault("0")
     private Integer version;
 }

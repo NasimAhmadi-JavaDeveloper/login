@@ -16,13 +16,13 @@ public class ExceptionHandling extends ResponseEntityExceptionHandler {
     @ExceptionHandler(LogicalException.class)
     public Object handleBusinessExceptions(LogicalException e) {
         log.warn("Business Error Occurred! {}", e.getMessage());
-        return createErrorResponse(e);
+        return mapBusinessException(e);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public Object handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         log.warn("Uk exception Occurred! {}", e.getMessage());
-        return mapException(e);
+        return mapDataIntegrityViolation(e);
     }
 
     @ExceptionHandler(Throwable.class)
@@ -36,7 +36,7 @@ public class ExceptionHandling extends ResponseEntityExceptionHandler {
                 .body("Error occurred while sending OTP email: " + ex.getMessage());
     }
 
-    private ResponseEntity<ErrorResponse> createErrorResponse(LogicalException e) {
+    private ResponseEntity<ErrorResponse> mapBusinessException(LogicalException e) {
         return ResponseEntity
                 .status(e.getSpecs().getHttpStatus())
                 .body(new ErrorResponse(e.getSpecs().getMessage()));
@@ -47,5 +47,12 @@ public class ExceptionHandling extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(ExceptionSpec.SERVER_ERROR.getHttpStatus())
                 .body(new ErrorResponse(ExceptionSpec.SERVER_ERROR.getMessage()));
+    }
+
+    private Object mapDataIntegrityViolation(Exception e) {
+        log.error("Exception Occurred!", e);
+        return ResponseEntity
+                .status(ExceptionSpec.CONSTRAINT.getHttpStatus())
+                .body(new ErrorResponse(ExceptionSpec.CONSTRAINT.getMessage()));
     }
 }

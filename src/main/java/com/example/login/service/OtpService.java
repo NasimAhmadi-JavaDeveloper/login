@@ -38,20 +38,25 @@ public class OtpService {
     public OtpResponse sendOtp(String email) {
         return otpRepository.findByEmail(email)
                 .map(this::handleExistingOtp)
-                .orElseGet(() -> sendNewOtp(email));
+                .orElseGet(() -> {
+                    String otpCode = createNewOtp(email);
+                    return new OtpResponse(otpCode);
+                });
     }
 
     public OtpResponse handleExistingOtp(Otp existingOtp) {
         if (isOtpExpired(existingOtp)) {
             deleteExpiredOtp(existingOtp.getEmail());
-            return sendNewOtp(existingOtp.getEmail());
+            String otp = createNewOtp(existingOtp.getEmail());
+            mailService.sendOtpToEmail(existingOtp.getEmail(), otp);
+            return new OtpResponse(otp);
         }
         return getActiveOtp(existingOtp.getEmail())
                 .map(this::createResponseForActiveOtp)
                 .orElseGet(() -> updateOtp(existingOtp));
     }
 
-    private OtpResponse sendNewOtp(String email) {
+    public String createNewOtp(String email) {
         String otpCode = generateOtpCode();
         LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(otpExpirationMinutes);
 
@@ -64,8 +69,7 @@ public class OtpService {
                 .lockTimeDuration(null)
                 .build();
         otpRepository.save(entity);
-        mailService.sendOtpToEmail(email, otpCode);
-        return new OtpResponse(otpCode);
+        return otpCode;
     }
 
     public Optional<Otp> getActiveOtp(String email) {
