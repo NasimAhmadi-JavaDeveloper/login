@@ -16,6 +16,7 @@ public interface UserMapper {
     @Mapping(target = "lockTimeDuration", ignore = true)
     @Mapping(target = "failedLoginAttempts", ignore = true)
     @Mapping(target = "password", source = "password", qualifiedByName = "stringToCharArray")
+    @Mapping(target = "version", ignore = true)
     User toEntity(UserRequest request, String password);
 
     @Named("stringToCharArray")

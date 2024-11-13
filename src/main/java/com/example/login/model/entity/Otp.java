@@ -1,6 +1,7 @@
 package com.example.login.model.entity;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -46,4 +47,8 @@ public class Otp {
 
     @Column(nullable = false)
     private Integer otpRequestCount;
+
+    @Version
+    @ColumnDefault("0")
+    private Integer version;
 }

@@ -40,4 +40,6 @@ public class User {
     @Column(nullable = false)
     private Integer failedLoginAttempts;
     private LocalDateTime lockTimeDuration;
+    @Version
+    private Integer version;
 }

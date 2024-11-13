@@ -2,7 +2,6 @@ package com.example.login.service;
 
 import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
-import com.example.login.exception.OtpEmailException;
 import com.example.login.model.entity.Otp;
 import com.example.login.model.entity.User;
 import com.example.login.model.response.OtpResponse;
@@ -10,11 +9,7 @@ import com.example.login.model.response.VerifyResponse;
 import com.example.login.repository.OtpRepository;
 import com.example.login.security.JWTService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.MailAuthenticationException;
-import org.springframework.mail.MailException;
-import org.springframework.mail.MailSendException;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,32 +21,39 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class OtpService {
 
+    @Value("${lock.time.minutes:5}")
+    private int lockTimeMinutes;
+    @Value("${otp.expiration.minutes:1}")
+    private int otpExpirationMinutes;
+    @Value("${otp.max.requests.per.hour:5}")
+    private int maxOtpRequestsPerHour;
+
     private final JWTService jwtService;
     private final UserService userService;
     private final OtpRepository otpRepository;
-    private final JavaMailSender mailSender;
-    private static final int LOCK_TIME_MIN = 5;
+    private final MailService mailService;
     private static final int DEFAULT_REQUEST_COUNT = 1;
-    private static final int OTP_EXPIRATION_MINUTES = 1;
-    private static final int MAX_OTP_REQUESTS_PER_HOUR = 5;
     private static final int DEFAULT_FAILED_OTP_ATTEMPT = 0;
 
     public OtpResponse sendOtp(String email) {
-        Optional<Otp> existOtp = otpRepository.findByEmail(email);
-
-        if (existOtp.isPresent()) {
-            return getActiveOtp(email)
-                    .map(this::createResponseForActiveOtp)
-                    .orElseGet(() -> updateOtpWithNewCode(existOtp.get()));
-        } else {
-            String otp = generateOtpAndSend(email);
-            return new OtpResponse(otp);
-        }
+        return otpRepository.findByEmail(email)
+                .map(this::handleExistingOtp)
+                .orElseGet(() -> sendNewOtp(email));
     }
 
-    private String generateOtpAndSend(String email) {
+    public OtpResponse handleExistingOtp(Otp existingOtp) {
+        if (isOtpExpired(existingOtp)) {
+            deleteExpiredOtp(existingOtp.getEmail());
+            return sendNewOtp(existingOtp.getEmail());
+        }
+        return getActiveOtp(existingOtp.getEmail())
+                .map(this::createResponseForActiveOtp)
+                .orElseGet(() -> updateOtp(existingOtp));
+    }
+
+    private OtpResponse sendNewOtp(String email) {
         String otpCode = generateOtpCode();
-        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(OTP_EXPIRATION_MINUTES);
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(otpExpirationMinutes);
 
         Otp entity = Otp.builder()
                 .otpCode(otpCode)
@@ -62,8 +64,8 @@ public class OtpService {
                 .lockTimeDuration(null)
                 .build();
         otpRepository.save(entity);
-        sendOtpToEmail(email, otpCode);
-        return otpCode;
+        mailService.sendOtpToEmail(email, otpCode);
+        return new OtpResponse(otpCode);
     }
 
     public Optional<Otp> getActiveOtp(String email) {
@@ -75,38 +77,41 @@ public class OtpService {
         return new OtpResponse(String.format("Your current OTP is still valid. It will expire in %d seconds.", secondsLeft));
     }
 
-    private OtpResponse updateOtpWithNewCode(Otp otp) {
+    private OtpResponse updateOtp(Otp otp) {
         int newOtpRequestCount = otp.getOtpRequestCount() + 1;
 
-        if (newOtpRequestCount >= MAX_OTP_REQUESTS_PER_HOUR) {
-            otpCountLimitExceeded(otp, newOtpRequestCount);
+        if (checkAndHandleOtpRequestLimit(otp, newOtpRequestCount)) {
+            throw new LogicalException(ExceptionSpec.USER_LOCKED);
         }
 
-        Integer id = otp.getId();
-        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(OTP_EXPIRATION_MINUTES);
-        String otpCode = generateOtpCode();
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(otpExpirationMinutes);
+        otp.setExpirationTime(expirationTime);
 
-        otpRepository.updateOtp(id, expirationTime, otpCode, newOtpRequestCount);
-        sendOtpToEmail(otp.getEmail(), otpCode);
+        String otpCode = generateOtpCode();
+        otp.setOtpCode(otpCode);
+        otp.setOtpRequestCount(newOtpRequestCount);
+        otpRepository.save(otp);
+
+        mailService.sendOtpToEmail(otp.getEmail(), otpCode);
         return new OtpResponse(otpCode);
     }
 
-    private void otpCountLimitExceeded(Otp otp, int newOtpRequestCount) {
+    private boolean checkAndHandleOtpRequestLimit(Otp otp, int newOtpRequestCount) {
         LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
 
-        if (otp.getUpdatedAt().isAfter(oneHourAgo)) {
-            otp.setLockTimeDuration(LocalDateTime.now().plusMinutes(LOCK_TIME_MIN));
+        if (otp.getUpdatedAt().isAfter(oneHourAgo) && newOtpRequestCount >= maxOtpRequestsPerHour) {
+            otp.setLockTimeDuration(LocalDateTime.now().plusMinutes(lockTimeMinutes));
             otp.setOtpRequestCount(newOtpRequestCount);
             otpRepository.save(otp);
-            throw new LogicalException(ExceptionSpec.USER_LOCKED);
+            return true;
         }
+
+        return false;
     }
 
     public String generateOtpCode() {
-        int length = new Random().nextBoolean() ? 6 : 4;
-        int max = (int) Math.pow(10, length) - 1;
-        int min = (int) Math.pow(10, length - 1);
-        return String.valueOf(min + new Random().nextInt(max - min + 1));
+        int otpCode = new Random().nextInt(900000) + 100000;
+        return String.valueOf(otpCode);
     }
 
     public VerifyResponse verifyAndSendToken(String otp) {
@@ -153,20 +158,7 @@ public class OtpService {
         }
     }
 
-    private void sendOtpToEmail(String email, String otpCode) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Your OTP Code");
-        message.setText(String.format("Your OTP code is %s. It will expire in %d minutes.", otpCode, OTP_EXPIRATION_MINUTES));
-
-        try {
-            mailSender.send(message);
-        } catch (MailAuthenticationException e) {
-            throw new OtpEmailException("Authentication failed while sending OTP email.", e);
-        } catch (MailSendException e) {
-            throw new OtpEmailException("Failed to send OTP email.", e);
-        } catch (MailException e) {
-            throw new OtpEmailException("An error occurred while sending OTP email.", e);
-        }
+    private void deleteExpiredOtp(String email) {
+        otpRepository.deleteByEmail(email);
     }
 }

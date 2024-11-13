@@ -17,14 +17,9 @@ public interface OtpRepository extends JpaRepository<Otp, Integer> {
 
     Optional<Otp> findByEmail(String email);
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE Otp o SET o.expirationTime = :expirationTime, o.otpCode = :otpCode, o.otpRequestCount = :newOtpRequestCount WHERE o.id = :id")
-    void updateOtp(@Param("id") Integer id,
-                               @Param("expirationTime") LocalDateTime expirationTime,
-                               @Param("otpCode") String otpCode,
-                               @Param("newOtpRequestCount") int newOtpRequestCount);
-
     Optional<Otp> findByOtpCode(String otpCode);
 
+    @Modifying
+    @Transactional
+    void deleteByEmail(String email);
 }
