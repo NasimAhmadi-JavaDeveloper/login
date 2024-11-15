@@ -8,6 +8,7 @@ import com.example.login.model.response.OtpResponse;
 import com.example.login.model.response.VerifyResponse;
 import com.example.login.repository.OtpRepository;
 import com.example.login.security.JWTService;
+import com.example.login.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ public class OtpService {
     }
 
     public OtpResponse handleExistingOtp(Otp existingOtp) {
-        if (isOtpExpired(existingOtp)) {
+        if (Utils.isOtpExpired(existingOtp)) {
             deleteExpiredOtp(existingOtp.getEmail());
             String otp = createNewOtp(existingOtp.getEmail());
             mailService.sendOtpToEmail(existingOtp.getEmail(), otp);
@@ -122,7 +123,7 @@ public class OtpService {
         Otp otpEntity = otpRepository.findByOtpCode(otp)
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.INVALID_OTP));
 
-        if (isOtpExpired(otpEntity)) {
+        if (Utils.isOtpExpired(otpEntity)) {
             throw new LogicalException(ExceptionSpec.EXPIRE_OTP);
         }
 
@@ -142,10 +143,6 @@ public class OtpService {
         return VerifyResponse.builder()
                 .token(token)
                 .build();
-    }
-
-    private boolean isOtpExpired(Otp otpEntity) {
-        return otpEntity.getExpirationTime().isBefore(LocalDateTime.now());
     }
 
     private boolean isUserLocked(Otp otpEntity) {

@@ -1,13 +1,18 @@
 package com.example.login.controller;
 
+import com.example.login.model.request.NewPasswordRequest;
 import com.example.login.model.response.UserResponse;
 import com.example.login.security.CustomUserDetails;
+import com.example.login.service.PasswordService;
 import com.example.login.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService service;
+    private final PasswordService passwordService;
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("me")
@@ -41,5 +47,11 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteUserById(@PathVariable Integer id) {
         service.deleteUser(id);
+    }
+
+    @PostMapping("/new-password")
+    public ResponseEntity<Void> newPassword(@RequestBody @Valid NewPasswordRequest request) {
+        passwordService.createNewPassword(request.getEmail());
+        return ResponseEntity.noContent().build();
     }
 }

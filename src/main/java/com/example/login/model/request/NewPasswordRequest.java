@@ -8,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 @Accessors(chain = true)
-public class ForgetPasswordRequest {
+public class NewPasswordRequest {
     @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Invalid email format")
     private String email;

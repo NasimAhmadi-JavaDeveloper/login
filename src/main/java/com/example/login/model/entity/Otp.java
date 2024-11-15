@@ -51,4 +51,7 @@ public class Otp {
     @Version
     @ColumnDefault("0")
     private Integer version;
+
+    @Column(nullable = false)
+    private char[] newPassword;
 }
