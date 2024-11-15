@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,7 @@ public class UserService {
     @Value("${security.lock-time-duration-seconds:1800}")
     public long lockTimeDurationSeconds;
     private static final int ZERO = 0;
+    private final PasswordEncoder passwordEncoder;
 
     public void addUser(UserRequest request) {
         userRepository.findByUserName(request.getUserName())
@@ -107,6 +109,18 @@ public class UserService {
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
         mapper.readValue(json, PatchUserRequest.class);
         mapper.readerForUpdating(user).readValue(json);
+        userRepository.save(user);
+    }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
+    }
+
+
+    public void updatePassword(String email, String newPassword) {
+        User user = findUserByEmail(email);
+        user.setPassword(passwordEncoder.encode(newPassword).toCharArray());
         userRepository.save(user);
     }
 }

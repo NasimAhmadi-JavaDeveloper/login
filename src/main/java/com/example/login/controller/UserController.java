@@ -54,4 +54,10 @@ public class UserController {
         passwordService.createNewPassword(request.getEmail());
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/forget-password")
+    public ResponseEntity<Void> forgetPassword(@RequestParam String otp, @RequestParam String newPassword) {
+        passwordService.forgetPassword(otp, newPassword);
+        return ResponseEntity.noContent().build();
+    }
 }

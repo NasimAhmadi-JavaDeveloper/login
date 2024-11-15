@@ -162,4 +162,9 @@ public class OtpService {
     private void deleteExpiredOtp(String email) {
         otpRepository.deleteByEmail(email);
     }
+
+    public Otp getOtp(String otp) {
+        return otpRepository.findByOtpCode(otp)
+                .orElseThrow(() -> new LogicalException(ExceptionSpec.OTP_NOT_FOUND));
+    }
 }
