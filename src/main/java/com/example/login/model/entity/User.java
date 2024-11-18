@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -20,28 +21,57 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "user")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column(nullable = false, unique = true)
     private String userName;
+
     @Column(unique = true)
     private String email;
+
     @Convert(converter = CryptoConverter.class)
     @Column(unique = true)
     private String phone;
+
     @Column(nullable = false)
     private char[] password;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
+
     @Column
     @CreatedBy
     private String createdBy;
+
     @Column(nullable = false)
     private Integer failedLoginAttempts;
+
     private LocalDateTime lockTimeDuration;
+
     @Version
     @ColumnDefault("0")
     private Integer version;
+
+    private String profilePicture;
+
+    private String bio;
+
+    private Integer followersCount;
+
+    private Integer followingCount;
+
+    private Integer postCount;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
+    private List<Follow> follows;
+
+    @OneToMany(mappedBy = "followee", cascade = CascadeType.ALL)
+    private List<Follow> followings;
 }
