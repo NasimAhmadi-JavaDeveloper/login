@@ -27,7 +27,7 @@ public class UpdateUserService {
         User user = userRepository.findById(request.getId())
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
         user.setUserName(request.getUserName());
-        user.setPassword(passwordEncoder.encode(request.getPassword()).toCharArray());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setRole(request.getRole());

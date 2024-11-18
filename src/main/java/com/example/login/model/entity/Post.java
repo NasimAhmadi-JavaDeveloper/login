@@ -42,15 +42,6 @@ public class Post {
     private List<String> imageUrls;
 
     @ColumnDefault("0")
-    private Integer likeCount;
-
-    @ColumnDefault("0")
-    private Integer dislikeCount;
-
-    @ColumnDefault("0")
-    private Integer commentsCount;
-
-    @ColumnDefault("0")
     private Integer visitCount;
 
     @CreationTimestamp

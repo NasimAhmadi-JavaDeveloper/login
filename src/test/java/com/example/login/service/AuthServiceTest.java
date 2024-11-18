@@ -50,7 +50,7 @@ class AuthServiceTest {
         //GIVEN Entity
         user = new User();
         user.setUserName("nasim");
-        user.setPassword("1375".toCharArray());
+        user.setPassword("1375");
         user.setFailedLoginAttempts(0);
         user.setLockTimeDuration(null);
 
@@ -86,7 +86,7 @@ class AuthServiceTest {
         //GIVEN Entity
         user = new User();
         user.setUserName("nasim");
-        user.setPassword("1375".toCharArray());
+        user.setPassword("1375");
         user.setFailedLoginAttempts(0);
         user.setLockTimeDuration(LocalDateTime.now().minusMinutes(10));
 
@@ -123,7 +123,7 @@ class AuthServiceTest {
         //GIVEN Entity
         user = new User();
         user.setUserName("nasim");
-        user.setPassword("1375".toCharArray());
+        user.setPassword("1375");
         user.setFailedLoginAttempts(2);
         user.setLockTimeDuration(null);
 
@@ -156,7 +156,7 @@ class AuthServiceTest {
         //GIVEN Entity
         User user = new User();
         user.setUserName("nasim");
-        user.setPassword("1375".toCharArray());
+        user.setPassword("1375");
         user.setFailedLoginAttempts(3);
         user.setLockTimeDuration(LocalDateTime.now().minusMinutes(40));
 

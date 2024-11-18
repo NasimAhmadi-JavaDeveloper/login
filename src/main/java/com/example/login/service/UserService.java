@@ -120,7 +120,7 @@ public class UserService {
 
     public void updatePassword(String email, String newPassword) {
         User user = findUserByEmail(email);
-        user.setPassword(passwordEncoder.encode(newPassword).toCharArray());
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 }

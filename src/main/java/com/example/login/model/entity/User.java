@@ -37,7 +37,7 @@ public class User {
     private String phone;
 
     @Column(nullable = false)
-    private char[] password;
+    private String password;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -60,18 +60,12 @@ public class User {
 
     private String bio;
 
-    private Integer followersCount;
-
-    private Integer followingCount;
-
-    private Integer postCount;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "follower")
     private List<Follow> follows;
 
-    @OneToMany(mappedBy = "followee", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "followee")
     private List<Follow> followings;
 }

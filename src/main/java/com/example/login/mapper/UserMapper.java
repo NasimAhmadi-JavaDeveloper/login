@@ -5,7 +5,6 @@ import com.example.login.model.request.UserRequest;
 import com.example.login.model.response.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
@@ -15,14 +14,14 @@ public interface UserMapper {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "lockTimeDuration", ignore = true)
     @Mapping(target = "failedLoginAttempts", ignore = true)
-    @Mapping(target = "password", source = "password", qualifiedByName = "stringToCharArray")
     @Mapping(target = "version", ignore = true)
+    @Mapping(target = "profilePicture", ignore = true)
+    @Mapping(target = "bio", ignore = true)
+    @Mapping(target = "posts", ignore = true)
+    @Mapping(target = "follows", ignore = true)
+    @Mapping(target = "followings", ignore = true)
     User toEntity(UserRequest request, String password);
 
-    @Named("stringToCharArray")
-    default char[] mapStringToCharArray(String password) {
-        return password != null ? password.toCharArray() : null;
-    }
 
     UserResponse toResponse(User user);
 }
