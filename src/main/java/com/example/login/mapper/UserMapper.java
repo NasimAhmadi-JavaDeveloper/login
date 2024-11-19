@@ -11,10 +11,8 @@ import org.mapstruct.ReportingPolicy;
 public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "lockTimeDuration", ignore = true)
     @Mapping(target = "failedLoginAttempts", ignore = true)
-    @Mapping(target = "version", ignore = true)
     @Mapping(target = "profilePicture", ignore = true)
     @Mapping(target = "bio", ignore = true)
     @Mapping(target = "posts", ignore = true)

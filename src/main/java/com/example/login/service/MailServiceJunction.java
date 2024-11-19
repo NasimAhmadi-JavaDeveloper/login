@@ -28,7 +28,7 @@ public class MailServiceJunction {
         Otp entity = Otp.builder()
                 .otpCode(otpCode)
                 .email(email)
-                .newPassword(newPassword.toCharArray())
+                .newPassword(newPassword)
                 .expirationTime(expirationTime)
                 .failedOtpAttempts(DEFAULT_FAILED_OTP_ATTEMPT)
                 .otpRequestCount(DEFAULT_REQUEST_COUNT)

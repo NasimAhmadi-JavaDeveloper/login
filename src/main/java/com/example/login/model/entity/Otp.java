@@ -1,9 +1,7 @@
 package com.example.login.model.entity;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
@@ -15,9 +13,10 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@Audited
+@EqualsAndHashCode(of = "id", callSuper = true)
 @Table(name = "otp")
-public class Otp {
+public class Otp extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -32,14 +31,6 @@ public class Otp {
     @Column(nullable = false)
     private LocalDateTime expirationTime;
 
-    @CreationTimestamp
-    @Column(updatable = false, nullable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(updatable = false, nullable = false)
-    private LocalDateTime updatedAt;
-
     @Column(nullable = false)
     private Integer failedOtpAttempts;
 
@@ -48,10 +39,6 @@ public class Otp {
     @Column(nullable = false)
     private Integer otpRequestCount;
 
-    @Version
-    @ColumnDefault("0")
-    private Integer version;
-
     @Column(nullable = false)
-    private char[] newPassword;
+    private String newPassword;
 }

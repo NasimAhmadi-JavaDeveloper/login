@@ -1,49 +1,44 @@
 package com.example.login.model.entity;
 
+import com.example.login.model.enums.Emoji;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Table
 @Entity
 @Getter
 @Setter
+@Audited
 @DynamicInsert
 @DynamicUpdate
 @ToString(of = "id")
 @Accessors(chain = true)
-@EqualsAndHashCode(of = "id")
-public class Comment {
+@EqualsAndHashCode(of = "id", callSuper = true)
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)
     private String commentText;
 
-    @CreationTimestamp
-    @Column(updatable = false, nullable = false)
-    private LocalDateTime createdAt;
-
-    @Version
-    @ColumnDefault("0")
-    private Integer version;
+    @Enumerated
+    private Emoji emoji;
 }

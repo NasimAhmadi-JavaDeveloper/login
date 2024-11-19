@@ -3,8 +3,7 @@ package com.example.login.model.entity;
 import com.example.login.enumeration.Role;
 import com.example.login.model.converter.CryptoConverter;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.CreatedBy;
+import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -13,14 +12,16 @@ import java.util.List;
 
 @Setter
 @Getter
+@Audited
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "id", callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
+
 @Table(name = "user")
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,24 +44,18 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
 
-    @Column
-    @CreatedBy
-    private String createdBy;
-
     @Column(nullable = false)
     private Integer failedLoginAttempts;
 
     private LocalDateTime lockTimeDuration;
 
-    @Version
-    @ColumnDefault("0")
-    private Integer version;
-
+    @Lob
     private String profilePicture;
 
+    @Lob
     private String bio;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Post> posts;
 
     @OneToMany(mappedBy = "follower")

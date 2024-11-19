@@ -23,6 +23,7 @@ public class SaveUserService {
     @Cacheable(value = "userByEmail", key = "#request.email")
     public UserResponse saveUser(UserRequest request) {
         User user = userMapper.toEntity(request, passwordEncoder.encode(request.getPassword()));
+        user.getPosts().remove(0);
         return userMapper.toResponse(userRepository.save(user));
     }
 }
