@@ -1,5 +1,6 @@
 package com.example.login.model.entity;
 
+import com.example.login.model.converter.StringListConverter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,9 +51,9 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    @Fetch(FetchMode.JOIN)
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Set<User> likes = new HashSet<>();
 
-    private List<String> tag;//# like comment ,emoji,floweer,
+    @Convert(converter = StringListConverter.class)
+    private List<String> tag;
 }

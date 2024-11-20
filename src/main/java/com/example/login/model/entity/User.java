@@ -19,7 +19,6 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id", callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
-
 @Table(name = "user")
 public class User extends BaseEntity {
 
@@ -58,9 +57,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "follower")
-    private List<Follow> follows;
+    @ManyToMany
+    private List<User> following;
 
-    @OneToMany(mappedBy = "followee")
-    private List<Follow> followings;
+    @ManyToMany
+    private List<User> followers;
 }

@@ -16,8 +16,8 @@ public interface UserMapper {
     @Mapping(target = "profilePicture", ignore = true)
     @Mapping(target = "bio", ignore = true)
     @Mapping(target = "posts", ignore = true)
-    @Mapping(target = "follows", ignore = true)
-    @Mapping(target = "followings", ignore = true)
+    @Mapping(target = "followers", ignore = true)
+    @Mapping(target = "following", ignore = true)
     User toEntity(UserRequest request, String password);
 
 
