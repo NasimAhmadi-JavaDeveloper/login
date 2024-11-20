@@ -34,7 +34,6 @@ public class Post extends BaseEntity {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)
@@ -51,7 +50,7 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany
     private Set<User> likes = new HashSet<>();
 
     @Convert(converter = StringListConverter.class)

@@ -28,15 +28,13 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "post_id")
+    @ManyToOne
     private Post post;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
+    @Column(length = 200)
     private String commentText;
 
     @Enumerated
