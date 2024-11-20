@@ -36,7 +36,7 @@ public class Post extends BaseEntity {
     @ManyToOne(optional = false)
     private User user;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String caption;
 
     @ElementCollection
