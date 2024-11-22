@@ -42,7 +42,7 @@ public class Post extends BaseEntity {
     private List<String> imageUrls;
 
     @ColumnDefault("0")
-    private Integer visitCount;
+    private Integer visitCount = 0;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
