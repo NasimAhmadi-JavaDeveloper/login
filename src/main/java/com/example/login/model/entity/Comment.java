@@ -8,7 +8,6 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 
@@ -16,7 +15,6 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Audited
 @DynamicInsert
 @DynamicUpdate
 @ToString(of = "id")

@@ -4,22 +4,12 @@ import com.example.login.model.entity.User;
 import com.example.login.model.request.UserRequest;
 import com.example.login.model.response.UserResponse;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "lockTimeDuration", ignore = true)
-    @Mapping(target = "failedLoginAttempts", ignore = true)
-    @Mapping(target = "profilePicture", ignore = true)
-    @Mapping(target = "bio", ignore = true)
-    @Mapping(target = "posts", ignore = true)
-    @Mapping(target = "followers", ignore = true)
-    @Mapping(target = "following", ignore = true)
     User toEntity(UserRequest request, String password);
-
 
     UserResponse toResponse(User user);
 }

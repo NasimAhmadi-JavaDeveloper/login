@@ -25,4 +25,6 @@ public class UserRequest {
     private String phone;
     @NotNull(message = "role is required")
     private Role role;
+    private String bio;
+    private String profilePicture;
 }

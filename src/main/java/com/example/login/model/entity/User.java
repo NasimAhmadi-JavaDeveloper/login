@@ -3,16 +3,16 @@ package com.example.login.model.entity;
 import com.example.login.enumeration.Role;
 import com.example.login.model.converter.CryptoConverter;
 import lombok.*;
-import org.hibernate.envers.Audited;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
 @Getter
-@Audited
 @Entity
 @Builder
 @AllArgsConstructor
@@ -43,7 +43,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
 
-    @Column(nullable = false)
+    @ColumnDefault("0")
     private Integer failedLoginAttempts;
 
     private LocalDateTime lockTimeDuration;
@@ -55,7 +55,7 @@ public class User extends BaseEntity {
     private String bio;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Post> posts;
+    private List<Post> posts = new ArrayList<>();
 
     @ManyToMany
     private List<User> following;

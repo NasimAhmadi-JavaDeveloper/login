@@ -1,7 +1,6 @@
 package com.example.login.model.entity;
 
 import lombok.*;
-import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
@@ -13,10 +12,10 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Audited
 @EqualsAndHashCode(of = "id", callSuper = true)
 @Table(name = "otp")
 public class Otp extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

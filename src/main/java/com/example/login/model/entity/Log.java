@@ -4,7 +4,6 @@ import com.example.login.enumeration.LogType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,7 +11,6 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Entity
-@Audited
 @Table(name = "logs")
 @Accessors(chain = true)
 public class Log {
