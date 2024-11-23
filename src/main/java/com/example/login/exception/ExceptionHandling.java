@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -36,6 +37,11 @@ public class ExceptionHandling extends ResponseEntityExceptionHandler {
                 .body("Error occurred while sending OTP email: " + ex.getMessage());
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public Object handleAccessDeniedException(AccessDeniedException ex) {
+        return mapAccessDeniedException(ex);
+    }
+
     private ResponseEntity<ErrorResponse> mapBusinessException(LogicalException e) {
         return ResponseEntity
                 .status(e.getSpecs().getHttpStatus())
@@ -54,5 +60,12 @@ public class ExceptionHandling extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(ExceptionSpec.CONSTRAINT.getHttpStatus())
                 .body(new ErrorResponse(ExceptionSpec.CONSTRAINT.getMessage()));
+    }
+
+    private Object mapAccessDeniedException(Exception e) {
+        log.error("Exception Occurred!", e);
+        return ResponseEntity
+                .status(ExceptionSpec.INVALID_ROLE.getHttpStatus())
+                .body(new ErrorResponse(ExceptionSpec.INVALID_ROLE.getMessage()));
     }
 }

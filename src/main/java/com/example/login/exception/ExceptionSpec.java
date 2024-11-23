@@ -23,6 +23,9 @@ public enum ExceptionSpec {
     OTP_NOT_FOUND("OTP does not exist for this user", HttpStatus.BAD_REQUEST),
     INVALID_OTP("The OTP code has expired", HttpStatus.BAD_REQUEST),
     POST_NOT_FOUND("post not found", HttpStatus.NOT_FOUND),
+    INVALID_ROLE("invalid role", HttpStatus.BAD_REQUEST),
+
+
 
     ;
     private final String message;
