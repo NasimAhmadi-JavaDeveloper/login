@@ -51,7 +51,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public void addLike(final int userId, final long postId) {
+    public void addLike(int userId, long postId) {
         final User user = userService.getUser(userId);
         final Post post = getPost(postId);
 
@@ -63,8 +63,13 @@ public class PostService {
         postRepository.save(post);
     }
 
-    private Post getPost(final long postId) {
+    public Post getPost(long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.POST_NOT_FOUND));
+    }
+
+    public void disLike(int userId, long postId) {
+
+
     }
 }

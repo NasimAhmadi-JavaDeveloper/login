@@ -48,10 +48,20 @@ public class PostController {
     @PostMapping("like/{postId}")
     @PreAuthorize("hasRole('USER')")
     @Operation(
-            summary = "Send a like to a post",
-            description = "Allows a user to like a post by providing the post ID."
+            summary = "Like to a post",
+            description = "Allows a user to like a post"
     )
     public void sendLike(@PathVariable("postId") long postId) {
         postService.addLike(Utils.getCurrentUserId(), postId);
+    }
+
+    @PostMapping("disLike/{postId}")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(
+            summary = "Dislike to a post",
+            description = "Allows a user to dislike a post"
+    )
+    public void disLike(@PathVariable("postId") long postId) {
+        postService.disLike(Utils.getCurrentUserId(), postId);
     }
 }
