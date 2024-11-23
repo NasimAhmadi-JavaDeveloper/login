@@ -3,6 +3,8 @@ package com.example.login.controller;
 import com.example.login.model.request.PostRequest;
 import com.example.login.model.response.PostResponse;
 import com.example.login.service.PostService;
+import com.example.login.utils.Utils;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,5 +43,15 @@ public class PostController {
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("like/{postId}")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(
+            summary = "Send a like to a post",
+            description = "Allows a user to like a post by providing the post ID."
+    )
+    public void sendLike(@PathVariable("postId") long postId) {
+        postService.addLike(Utils.getCurrentUserId(), postId);
     }
 }
