@@ -3,6 +3,7 @@ package com.example.login.service;
 import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
 import com.example.login.mapper.PostMapper;
+import com.example.login.model.entity.Comment;
 import com.example.login.model.entity.Post;
 import com.example.login.model.entity.User;
 import com.example.login.model.request.PostRequest;
@@ -11,6 +12,7 @@ import com.example.login.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -71,5 +73,27 @@ public class PostService {
     public void disLike(int userId, long postId) {
 
 
+    }
+
+    public void testCascadePersist() {
+        Post post = new Post()
+                .setCaption("test11")
+                .setVisitCount(0)
+                .setImageUrls(Arrays.asList("https://test2","https://test3"))
+                .setUser(userService.getUser(2))
+                .setTag(Arrays.asList("#spring11 boot111", "#List11", "#Set11"));
+
+        Comment comment1 = new Comment()
+                .setCommentText("Great post!")
+                .setPost(post)
+                .setUser(userService.getUser(2));
+
+        Comment comment2 = new Comment()
+                .setCommentText("Nice picture!")
+                .setPost(post)
+                .setUser(userService.getUser(2));
+
+        post.setComments(Arrays.asList(comment1,comment2));
+        postRepository.save(post);
     }
 }

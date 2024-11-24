@@ -6,6 +6,7 @@ import com.example.login.service.PostService;
 import com.example.login.utils.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -63,5 +64,11 @@ public class PostController {
     )
     public void disLike(@PathVariable("postId") long postId) {
         postService.disLike(Utils.getCurrentUserId(), postId);
+    }
+
+    @GetMapping("/cascade-persist")
+    public ResponseEntity<String> testCascadePersist() {
+        postService.testCascadePersist();
+        return ResponseEntity.status(HttpStatus.CREATED).body("successfully");
     }
 }

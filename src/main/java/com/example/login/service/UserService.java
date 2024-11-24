@@ -1,12 +1,16 @@
 package com.example.login.service;
 
+import com.example.login.enumeration.Role;
 import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
 import com.example.login.mapper.UserMapper;
+import com.example.login.model.entity.Comment;
+import com.example.login.model.entity.Post;
 import com.example.login.model.entity.User;
 import com.example.login.model.request.PatchUserRequest;
 import com.example.login.model.request.UserRequest;
 import com.example.login.model.response.UserResponse;
+import com.example.login.repository.PostRepository;
 import com.example.login.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -20,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 
 @Slf4j
@@ -37,6 +43,7 @@ public class UserService {
     public long lockTimeDurationSeconds;
     private static final int ZERO = 0;
     private final PasswordEncoder passwordEncoder;
+    private final PostRepository postRepository;
 
     public void addUser(UserRequest request) {
         userRepository.findByUserName(request.getUserName())
@@ -122,5 +129,87 @@ public class UserService {
         User user = findUserByEmail(email);
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    public void testCascadeMergeThereIsUserPostIsNew() {
+        User user = getUserByName("test222222");
+        Post post = new Post()
+                .setCaption("test44")
+                .setVisitCount(0)
+                .setImageUrls(Arrays.asList("https://test44", "https://test44"))
+                .setUser(user)
+                .setTag(Arrays.asList("#spring44 boot444", "#List444", "#Set44"));
+
+        user.getPosts().add(post); //post saved
+        userRepository.save(user);
+    }
+
+    public void testCascadePersistUserIsNewPostIsNew() {
+        User user = new User()
+                .setUserName("namenew1111")
+                .setPhone("95779543107")
+                .setPassword(passwordEncoder.encode("name1123456789"))
+                .setRole(Role.ROLE_USER);
+
+        Post post = new Post()
+                .setCaption("test11111111")
+                .setVisitCount(0)
+                .setImageUrls(Arrays.asList("https://test11111", "https://test1111111"))
+                .setUser(user)
+                .setTag(Arrays.asList("#spring44 boot444", "#List444", "#Set44"));
+
+        user.getPosts().add(post);
+        userRepository.save(user); //user saved and post saved too
+    }
+
+    public void testCascadeAllWithoutOrphanRemoval() { //OrphanRemoval = false
+        User user = getUserByName("namenew1111");
+        user.getPosts().remove(0); //this post does not deleted in post table
+        userRepository.save(user);
+    }
+
+    public void testCascadeAllWithoutOrphanRemovalUserNameChange() { //OrphanRemoval = false
+        User user = getUserByName("namenew1111");
+        user.setUserName("test2121");//name changes
+        user.getPosts().remove(0);//this post does not deleted in post table
+        userRepository.save(user);
+    }
+
+    public void testCascadeAllWithOrphanRemovalTrue() {
+        User user = getUserByName("test2121");
+        user.getPosts().remove(0); // this post deleted in post table
+        userRepository.save(user);
+    }
+
+    public void testCascadeMerge() {
+        User user = getUserByName("test2121");
+        Post post = user.getPosts().get(0);
+
+        user.setUserName("setUser");
+        post.setCaption("setCaption");
+        userRepository.save(user);
+    }
+
+    public void testCascadeAllWithOrphanRemovalTrueUserDeletedPostAndCommentDeleted() {
+        User user = new User()
+                .setUserName("john_doe")
+                .setPhone("95779543000")
+                .setPassword(passwordEncoder.encode("pass123456789"))
+                .setEmail("john@example.com");
+
+        Post post = new Post()
+                .setCaption("Hello World!")
+                .setUser(user);
+
+        Comment comment = new Comment()
+                .setCommentText("Great post!")
+                .setUser(user)
+                .setPost(post);
+
+        user.setPosts(Collections.singletonList(post));
+        user.setComments(Collections.singletonList(comment));
+
+        userRepository.save(user);
+        userRepository.delete(user);
     }
 }

@@ -60,4 +60,46 @@ public class UserController {
         passwordService.forgetPassword(otp, newPassword);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/cascade-merge-there-is-user-post-is-new")
+    public ResponseEntity<Void> testCascadeMergeThereIsUserPostIsNew() {
+        service.testCascadeMergeThereIsUserPostIsNew();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/cascade-persist-user-is-new-post-is-new")
+    public ResponseEntity<Void> testCascadePersistUserIsNewPostIsNew() {
+        service.testCascadePersistUserIsNewPostIsNew();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/cascade-all-without-orphan-removal")
+    public ResponseEntity<Void> testCascadeAllWithoutOrphanRemoval() {
+        service.testCascadeAllWithoutOrphanRemoval();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/cascade-all-without-orphan-removal-user-name-change")
+    public ResponseEntity<Void> testCascadeAllWithoutOrphanRemovalUserNameChange() {
+        service.testCascadeAllWithoutOrphanRemovalUserNameChange();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/cascade-all-with-orphan-removal-true")
+    public ResponseEntity<Void> testCascadeAllWithOrphanRemovalTrue() {
+        service.testCascadeAllWithOrphanRemovalTrue();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/cascade-merge")
+    public ResponseEntity<Void> testCascadeMerge() {
+        service.testCascadeMerge();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user-deleted-post-and-comment-deleted")
+    public ResponseEntity<Void> testCascadeAllWithOrphanRemovalTrueUserDeletedPostAndCommentDeleted() {
+        service.testCascadeAllWithOrphanRemovalTrueUserDeletedPostAndCommentDeleted();
+        return ResponseEntity.noContent().build();
+    }
 }

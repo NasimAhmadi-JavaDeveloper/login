@@ -3,6 +3,7 @@ package com.example.login.model.entity;
 import com.example.login.enumeration.Role;
 import com.example.login.model.converter.CryptoConverter;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 @EqualsAndHashCode(of = "id", callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "user")
