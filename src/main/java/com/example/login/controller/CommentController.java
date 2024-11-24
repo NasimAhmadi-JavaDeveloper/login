@@ -21,7 +21,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @Operation(summary = "Get comments for a specific post with empty emoji")
+    @Operation(summary = "Get comments for a specific post")
     @GetMapping("comment/{postId}")
     public Page<CommentResponse> getComment(@PathVariable("postId") long postId,
                                             @RequestParam(defaultValue = "0") int page,

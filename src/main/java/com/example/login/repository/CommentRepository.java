@@ -9,8 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query("SELECT c FROM Comment c "
-            + " where c.post.id = ?1  "
-            + " and c.emoji is null "
-            + " order by c.createdAt desc ")
+            + " WHERE c.post.id = ?1 "
+            + " ORDER BY c.createdAt DESC ")
     Page<Comment> findAllComment(long postId, Pageable pageable);
 }

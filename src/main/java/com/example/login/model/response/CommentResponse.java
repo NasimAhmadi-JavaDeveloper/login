@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,4 +20,5 @@ public class CommentResponse {
     private String userName;
     private String commentText;
     private Emoji emoji;
+    private LocalDateTime createdAt;
 }

@@ -24,7 +24,8 @@ public enum ExceptionSpec {
     INVALID_OTP("The OTP code has expired", HttpStatus.BAD_REQUEST),
     POST_NOT_FOUND("post not found", HttpStatus.NOT_FOUND),
     INVALID_ROLE("invalid role", HttpStatus.BAD_REQUEST),
-
+    COMMENT_NOT_FOUND("comment not found" ,HttpStatus.BAD_REQUEST),
+    NOT_YOUR_COMMENT("not_your_comment" ,HttpStatus.BAD_REQUEST),
 
 
     ;
