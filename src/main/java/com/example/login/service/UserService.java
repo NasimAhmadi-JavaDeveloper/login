@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -124,13 +125,13 @@ public class UserService {
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
     }
 
-
     public void updatePassword(String email, String newPassword) {
         User user = findUserByEmail(email);
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 
+    //cascade
     public void testCascadeMergeThereIsUserPostIsNew() {
         User user = getUserByName("test222222");
         Post post = new Post()
@@ -211,5 +212,45 @@ public class UserService {
 
         userRepository.save(user);
         userRepository.delete(user);
+    }
+
+    public void followUser(Integer userId, Integer followingId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
+        User userToFollow = userRepository.findById(followingId)
+                .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
+
+        if (!user.getFollowing().contains(userToFollow)) {
+            user.getFollowing().add(userToFollow);
+            userToFollow.getFollowers().add(user);
+            userRepository.save(user);
+            userRepository.save(userToFollow);
+        }
+    }
+
+    public void unfollowUser(Integer userId, Integer followingId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
+        User userToUnfollow = userRepository.findById(followingId)
+                .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
+
+        if (user.getFollowing().contains(userToUnfollow)) {
+            user.getFollowing().remove(userToUnfollow);
+            userToUnfollow.getFollowers().remove(user);
+            userRepository.save(user);
+            userRepository.save(userToUnfollow);
+        }
+    }
+
+    public List<UserResponse> getFollowing(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
+        return userMapper.toResponseList(user.getFollowing());
+    }
+
+    public List<UserResponse> getFollowers(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
+        return userMapper.toResponseList(user.getFollowers());
     }
 }
