@@ -1,5 +1,7 @@
 package com.example.login.service;
 
+import com.example.login.exception.ExceptionSpec;
+import com.example.login.exception.LogicalException;
 import com.example.login.mapper.FollowMapper;
 import com.example.login.model.entity.Follow;
 import com.example.login.model.entity.User;
@@ -27,11 +29,11 @@ public class FollowService {
         User toUser = userService.getUser(toUserId);
 
         if (fromUserId == toUserId) {
-            throw new IllegalArgumentException("You cannot follow yourself.");
+            throw new LogicalException(ExceptionSpec.SELF_FOLLOW_NOT_ALLOWED);
         }
 
         if (followRepository.existsByFromAndTo(fromUser, toUser)) {
-            throw new IllegalArgumentException("Already following this user.");
+            throw new LogicalException(ExceptionSpec.ALREADY_FOLLOWING_USER);
         }
 
         Follow follow = new Follow()
