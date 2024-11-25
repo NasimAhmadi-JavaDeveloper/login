@@ -5,7 +5,6 @@ import com.example.login.model.response.UserResponse;
 import com.example.login.security.CustomUserDetails;
 import com.example.login.service.PasswordService;
 import com.example.login.service.UserService;
-import com.example.login.utils.Utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -105,31 +103,4 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/follow/{followingId}")
-    public ResponseEntity<String> followUser(@PathVariable Integer followingId) {
-        service.followUser(Utils.getCurrentUserId(), followingId);
-        return ResponseEntity.ok("User followed successfully");
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/unfollow/{followingId}")
-    public ResponseEntity<String> unfollowUser(@PathVariable Integer followingId) {
-        service.unfollowUser(Utils.getCurrentUserId(), followingId);
-        return ResponseEntity.ok("User unfollowed successfully");
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/following")
-    public ResponseEntity<List<UserResponse>> getFollowing() {
-        List<UserResponse> following = service.getFollowing(Utils.getCurrentUserId());
-        return ResponseEntity.ok(following);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/followers")
-    public ResponseEntity<List<UserResponse>> getFollowers() {
-        List<UserResponse> followers = service.getFollowers(Utils.getCurrentUserId());
-        return ResponseEntity.ok(followers);
-    }
 }

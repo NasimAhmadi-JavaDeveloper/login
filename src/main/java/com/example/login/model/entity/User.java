@@ -62,14 +62,4 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_following",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "following_id")
-    )
-    private List<User> following = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "following")
-    private List<User> followers = new ArrayList<>();
 }
