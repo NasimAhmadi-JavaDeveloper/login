@@ -27,9 +27,6 @@ public class DeleteUserService {
 
         user.getFollowers().clear();
         user.getFollowing().clear();
-
         userRepository.delete(user);
-
-
     }
 }
