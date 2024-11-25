@@ -1,12 +1,14 @@
 package com.example.login.controller;
 
 import com.example.login.model.request.NewPasswordRequest;
+import com.example.login.model.response.UserReportResponse;
 import com.example.login.model.response.UserResponse;
 import com.example.login.security.CustomUserDetails;
 import com.example.login.service.PasswordService;
 import com.example.login.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -101,6 +103,13 @@ public class UserController {
     public ResponseEntity<Void> testCascadeAllWithOrphanRemovalTrueUserDeletedPostAndCommentDeleted() {
         service.testCascadeAllWithOrphanRemovalTrueUserDeletedPostAndCommentDeleted();
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<Page<UserReportResponse>> getUserReports(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(service.getUserReports(page, size));
     }
 
 }

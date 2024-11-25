@@ -39,8 +39,8 @@ public class WebSecurityConfig {
                 .authorizeRequests()
 //                .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .antMatchers(anonPaths).permitAll()
-                .anyRequest()
-                .authenticated()
+ //               .anyRequest()
+ //               .authenticated()
                 .and()
                 .addFilter(jwtAuthFilter)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

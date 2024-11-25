@@ -9,8 +9,8 @@ import com.example.login.model.entity.Post;
 import com.example.login.model.entity.User;
 import com.example.login.model.request.PatchUserRequest;
 import com.example.login.model.request.UserRequest;
+import com.example.login.model.response.UserReportResponse;
 import com.example.login.model.response.UserResponse;
-import com.example.login.repository.PostRepository;
 import com.example.login.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -19,6 +19,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +46,6 @@ public class UserService {
     public long lockTimeDurationSeconds;
     private static final int ZERO = 0;
     private final PasswordEncoder passwordEncoder;
-    private final PostRepository postRepository;
 
     public void addUser(UserRequest request) {
         userRepository.findByUserName(request.getUserName())
@@ -213,4 +215,8 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    public Page<UserReportResponse> getUserReports(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.getUserReports(pageable);
+    }
 }
