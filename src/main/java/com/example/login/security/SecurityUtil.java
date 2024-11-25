@@ -25,7 +25,11 @@ public class SecurityUtil {
         if (authentication == null || !authentication.isAuthenticated()) {
             return Optional.empty();
         }
-        return Optional.ofNullable(((UserDetails) authentication.getPrincipal()).getUsername());
+        if (authentication.getPrincipal() instanceof String) {
+            return Optional.of(authentication.getPrincipal().toString());
+        } else {
+            return Optional.ofNullable(((UserDetails) authentication.getPrincipal()).getUsername());
+        }
     }
 
 }

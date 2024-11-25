@@ -63,8 +63,13 @@ public class User extends BaseEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToMany
-    private List<User> following;
+    @JoinTable(
+            name = "user_following",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id")
+    )
+    private List<User> following = new ArrayList<>();
 
-    @ManyToMany
-    private List<User> followers;
+    @ManyToMany(mappedBy = "following")
+    private List<User> followers = new ArrayList<>();
 }
