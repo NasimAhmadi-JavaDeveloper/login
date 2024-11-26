@@ -21,17 +21,17 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     User findUserWithPosts(@Param("id") Long id);
 
     @Query(value = "SELECT new com.example.login.model.response.UserReportResponse ("
-            + " u.id,"
-            + " u.userName,"
-            + " COALESCE(COUNT(l.id), 0),"
-            + " SIZE(u.posts),"
-            + " SIZE(u.comments),"
-            + " SIZE(u.followers),"
-            + " SIZE(u.following)) "
+            + " u.id AS userId,"
+            + " u.userName AS userName,"
+            + " COALESCE(COUNT(l.id), 0) AS totalLikes,"
+            + " SIZE(u.posts) AS totalPosts,"
+            + " SIZE(u.comments) AS totalComments,"
+            + " SIZE(u.followers) AS totalFollowers,"
+            + " SIZE(u.following) AS totalFollowing) "
             + " FROM User u"
             + " LEFT JOIN u.posts p"
             + " LEFT JOIN p.likes l"
-            + " GROUP BY u.id"
+            + " GROUP BY u.id" //u.userName
             + " ORDER BY COALESCE(COUNT(l.id), 0) DESC, SIZE(u.posts) DESC, SIZE(u.comments) DESC, SIZE(u.followers) DESC, SIZE(u.following) DESC")
     Page<UserReportResponse> getUserReports(Pageable pageable);
 

@@ -4,10 +4,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Table
 @Entity
@@ -17,7 +19,7 @@ import javax.persistence.*;
 @DynamicUpdate
 @EqualsAndHashCode(of = "id")
 @Accessors(chain = true)
-public class Follow extends BaseEntity {
+public class Follow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +30,8 @@ public class Follow extends BaseEntity {
 
     @ManyToOne(optional = false)
     private User to;
+
+    @CreationTimestamp
+    @Column(updatable = false, nullable = false)
+    private LocalDateTime createdAt;
 }
