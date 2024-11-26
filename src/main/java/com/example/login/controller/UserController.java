@@ -112,4 +112,12 @@ public class UserController {
         return ResponseEntity.ok(service.getUserReports(page, size));
     }
 
+    @GetMapping("/user-reports/search")
+    public ResponseEntity<Page<UserReportResponse>> getUserReportsSearchKey(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam String searchKey) {
+        return ResponseEntity.ok(service.getUserReportsSearchKey(page, size , searchKey));
+    }
+
 }

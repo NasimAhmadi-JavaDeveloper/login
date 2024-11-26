@@ -23,16 +23,30 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "SELECT new com.example.login.model.response.UserReportResponse ("
             + " u.id AS userId,"
             + " u.userName AS userName,"
-            + " COALESCE(COUNT(l.id), 0) AS totalLikes,"
             + " SIZE(u.posts) AS totalPosts,"
             + " SIZE(u.comments) AS totalComments,"
             + " SIZE(u.followers) AS totalFollowers,"
             + " SIZE(u.following) AS totalFollowing) "
             + " FROM User u"
-            + " LEFT JOIN u.posts p"
-            + " LEFT JOIN p.likes l"
-            + " GROUP BY u.id"
-            + " ORDER BY COALESCE(COUNT(l.id), 0) DESC, SIZE(u.posts) DESC, SIZE(u.comments) DESC, SIZE(u.followers) DESC, SIZE(u.following) DESC")
+            + " GROUP BY u.id")
     Page<UserReportResponse> getUserReports(Pageable pageable);
 
+    @Query(value = "SELECT new com.example.login.model.response.UserReportResponse ("
+            + " u.id AS userId,"
+            + " u.userName AS userName,"
+            + " SIZE(u.posts) AS totalPosts,"
+            + " SIZE(u.comments) AS totalComments,"
+            + " SIZE(u.followers) AS totalFollowers,"
+            + " SIZE(u.following) AS totalFollowing) "
+            + " FROM User u"
+            + " WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :searchKey, '%')) "
+            + " OR LOWER(u.email) LIKE LOWER(CONCAT('%', :searchKey, '%')) "
+            + " GROUP BY u.id")
+    Page<UserReportResponse> getUserReportsSearchKey(Pageable pageable ,@Param("searchKey") String searchKey);
+
+
+
+
+
 }
+

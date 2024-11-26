@@ -219,4 +219,10 @@ public class UserService {
         Pageable pageable = PageRequest.of(page, size);
         return userRepository.getUserReports(pageable);
     }
+
+    public Page<UserReportResponse> getUserReportsSearchKey(int page, int size ,String searchKey) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.getUserReportsSearchKey(pageable , searchKey);
+    }
+
 }
