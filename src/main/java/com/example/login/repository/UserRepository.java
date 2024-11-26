@@ -31,7 +31,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             + " FROM User u"
             + " LEFT JOIN u.posts p"
             + " LEFT JOIN p.likes l"
-            + " GROUP BY u.id" //u.userName
+            + " GROUP BY u.id"
             + " ORDER BY COALESCE(COUNT(l.id), 0) DESC, SIZE(u.posts) DESC, SIZE(u.comments) DESC, SIZE(u.followers) DESC, SIZE(u.following) DESC")
     Page<UserReportResponse> getUserReports(Pageable pageable);
 
