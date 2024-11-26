@@ -3,6 +3,7 @@ package com.example.login.service;
 import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
 import com.example.login.mapper.PostMapper;
+import com.example.login.model.dto.PostStatsDto;
 import com.example.login.model.entity.Comment;
 import com.example.login.model.entity.Post;
 import com.example.login.model.entity.User;
@@ -79,7 +80,7 @@ public class PostService {
         Post post = new Post()
                 .setCaption("test11")
                 .setVisitCount(0)
-                .setImageUrls(Arrays.asList("https://test2","https://test3"))
+                .setImageUrls(Arrays.asList("https://test2", "https://test3"))
                 .setUser(userService.getUser(2))
                 .setTag(Arrays.asList("#spring11 boot111", "#List11", "#Set11"));
 
@@ -93,7 +94,11 @@ public class PostService {
                 .setPost(post)
                 .setUser(userService.getUser(2));
 
-        post.setComments(Arrays.asList(comment1,comment2));
+        post.setComments(Arrays.asList(comment1, comment2));
         postRepository.save(post);
+    }
+
+    public List<PostStatsDto> getPostStatsByHour() {
+        return postRepository.countPostsByHour();
     }
 }

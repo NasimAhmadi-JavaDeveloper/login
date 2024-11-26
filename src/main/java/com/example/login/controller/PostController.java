@@ -1,5 +1,6 @@
 package com.example.login.controller;
 
+import com.example.login.model.dto.PostStatsDto;
 import com.example.login.model.request.PostRequest;
 import com.example.login.model.response.PostResponse;
 import com.example.login.service.PostService;
@@ -70,5 +71,10 @@ public class PostController {
     public ResponseEntity<String> testCascadePersist() {
         postService.testCascadePersist();
         return ResponseEntity.status(HttpStatus.CREATED).body("successfully");
+    }
+
+    @GetMapping("/post-stats")
+    public ResponseEntity<List<PostStatsDto>> postStatsByHour() {
+        return ResponseEntity.ok(postService.getPostStatsByHour());
     }
 }
