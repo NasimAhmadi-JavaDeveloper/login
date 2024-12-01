@@ -3,12 +3,15 @@ package com.example.login.service;
 import com.example.login.exception.OtpEmailException;
 import com.example.login.utils.Utils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.*;
 import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MailService {
@@ -97,5 +100,10 @@ public class MailService {
 
     public String generateMessage(String resetLink) {
         return resetPasswordMessage.replace("{resetLink}", resetLink);
+    }
+
+    @Recover
+    public void recover(MailException e, String email) {
+        log.error("Failed to send email to {} after retries. Error: {}", email, e.getMessage());
     }
 }
