@@ -51,9 +51,11 @@ public class User extends BaseEntity {
     private LocalDateTime lockTimeDuration;
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     private String profilePicture;
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     private String bio;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

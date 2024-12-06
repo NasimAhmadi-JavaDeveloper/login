@@ -13,6 +13,7 @@ import com.example.login.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +27,7 @@ public class PostService {
     private final UserService userService;
     private final PostMapper postMapper;
     private final PostRepository postRepository;
+    private final NotificationService notificationService;
 
     public PostResponse createPost(PostRequest.PostCreateDto dto) {
         User user = userService.getUser(dto.getUserId());
@@ -33,6 +35,10 @@ public class PostService {
         Post post = postMapper.toEntity(dto);
         post.setUser(user);
         Post savedPost = postRepository.save(post);
+
+        //send email as asynchronous
+        notificationService.sendNotificationEmail(user.getEmail(), "Your post has been created successfully!");
+
         return postMapper.toDto(savedPost);
     }
 
@@ -100,5 +106,9 @@ public class PostService {
 
     public List<PostStatsDto> getPostStatsByHour() {
         return postRepository.countPostsByHour();
+    }
+
+    public long countDaysUserLikedNewUsers(Integer userId, LocalDateTime startDate, LocalDateTime endDate) {
+        return postRepository.countDistinctLikedDatesByUserAndDateRange(userId, startDate, endDate);
     }
 }
