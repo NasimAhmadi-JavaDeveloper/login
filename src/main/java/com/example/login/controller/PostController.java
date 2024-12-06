@@ -91,4 +91,10 @@ public class PostController {
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
         return ResponseEntity.ok(postService.countDaysUserLikedNewUsers(userId, startDateTime, endDateTime));
     }
+
+    @GetMapping("/user-posts")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<PostResponse>> getUserPosts(@RequestParam int userId) {
+        return ResponseEntity.ok(postService.getUserPosts(userId));
+    }
 }

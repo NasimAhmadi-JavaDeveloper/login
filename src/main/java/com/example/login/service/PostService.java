@@ -12,15 +12,14 @@ import com.example.login.model.response.PostResponse;
 import com.example.login.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PostService {
 
@@ -106,6 +105,14 @@ public class PostService {
 
     public List<PostStatsDto> getPostStatsByHour() {
         return postRepository.countPostsByHour();
+    }
+
+
+    public List<PostResponse> getUserPosts(int userId) {
+        return postRepository.findUserPosts(userId)
+                .stream()
+                .map(postMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public long countDaysUserLikedNewUsers(Integer userId, LocalDateTime startDate, LocalDateTime endDate) {

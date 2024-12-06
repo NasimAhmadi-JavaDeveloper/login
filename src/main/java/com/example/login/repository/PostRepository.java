@@ -19,7 +19,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<PostStatsDto> countPostsByHour();
 
     @Query("FROM Post p WHERE p.user.id = :userId")
-    List<Post> findUserPosts(@Param("userId") Long userId);
+    List<Post> findUserPosts(@Param("userId") int userId);
 
     @Query("SELECT COUNT(DISTINCT FUNCTION('DATE', p.createdAt))" +
             "FROM Post p " +
@@ -30,4 +30,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     long countDistinctLikedDatesByUserAndDateRange(@Param("userId") Integer userId,
                                                    @Param("startDate") LocalDateTime startDate,
                                                    @Param("endDate") LocalDateTime endDate);
+
+//    @Query("SELECT p.user.id " +
+//            "FROM Post p " +
+//            "JOIN p.likes l " +
+//            "WHERE p.user.id = :userId " +
+//            "AND p.createdAt = :startDate ")
+//    long countDistinctLikedDatesByUserAndDateRange(@Param("userId") Integer userId,
+//                                                   @Param("date") LocalDateTime date);
 }
