@@ -97,4 +97,15 @@ public class PostController {
     public ResponseEntity<List<PostResponse>> getUserPosts(@RequestParam int userId) {
         return ResponseEntity.ok(postService.getUserPosts(userId));
     }
+
+    @GetMapping("/count-liked-days")
+    public ResponseEntity<Long> getCountDaysUserLikedNewUsers(
+            @RequestParam Integer userId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+        return ResponseEntity.ok(postService.countDaysWithNewLikes(userId, startDateTime, endDateTime));
+    }
 }

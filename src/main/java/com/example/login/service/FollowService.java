@@ -8,6 +8,7 @@ import com.example.login.model.entity.User;
 import com.example.login.model.response.FollowResponse;
 import com.example.login.repository.FollowRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,9 +53,11 @@ public class FollowService {
         followRepository.delete(follow);
     }
 
+    @Retryable(maxAttempts = 3)
     public List<FollowResponse> getFollowings(int userId) {
         User user =  userService.getUser(userId);
-        return followRepository.findByFrom(user)
+        List<Follow> byFrom = followRepository.findByFrom(user);
+        return byFrom
                 .stream()
                 .map(followMapper::toDto)
                 .collect(Collectors.toList());

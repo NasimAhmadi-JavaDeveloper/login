@@ -2,6 +2,7 @@ package com.example.login.repository;
 
 import com.example.login.model.dto.PostStatsDto;
 import com.example.login.model.entity.Post;
+import com.example.login.model.proj.LikeProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,9 +19,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             " order by HOUR(p.createdAt)")
     List<PostStatsDto> countPostsByHour();
 
+    //--Practice Query --
     @Query("FROM Post p WHERE p.user.id = :userId")
     List<Post> findUserPosts(@Param("userId") int userId);
 
+
+
+    //----
     @Query("SELECT COUNT(DISTINCT FUNCTION('DATE', p.createdAt))" +
             "FROM Post p " +
             "JOIN p.likes l " +
@@ -31,11 +36,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                                                    @Param("startDate") LocalDateTime startDate,
                                                    @Param("endDate") LocalDateTime endDate);
 
-//    @Query("SELECT p.user.id " +
-//            "FROM Post p " +
-//            "JOIN p.likes l " +
-//            "WHERE p.user.id = :userId " +
-//            "AND p.createdAt = :startDate ")
-//    long countDistinctLikedDatesByUserAndDateRange(@Param("userId") Integer userId,
-//                                                   @Param("date") LocalDateTime date);
+
+    @Query("SELECT DATE(l.createdAt) AS likeDate, p.user AS user "
+            + "FROM Post p "
+            + "JOIN p.likes l "
+            + "WHERE p.user.id = :userId "
+            + "AND l.createdAt BETWEEN :startDate AND :endDate")
+    List<LikeProjection> findLikeDataByUserIdAndDateRange(@Param("userId") Integer userId,
+                                                          @Param("startDate") LocalDateTime startDate,
+                                                          @Param("endDate") LocalDateTime endDate);
+
 }
