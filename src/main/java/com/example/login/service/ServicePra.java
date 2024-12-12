@@ -1,6 +1,5 @@
 package com.example.login.service;
 
-import com.example.login.model.entity.Comment;
 import com.example.login.repository.CommentRepository;
 import com.example.login.repository.PostRepository;
 import com.example.login.repository.UserRepository;
@@ -9,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -22,8 +20,8 @@ public class ServicePra {
 
     @PostConstruct
     public void test() {
-        List<Comment> commentByPostId = commentRepository.findCommentByPostId(90L);
-        log.info("findCommentByPostId: {}", commentByPostId);
+//        List<Comment> commentByPostId = commentRepository.findCommentByPostId(90L);
+//        log.info("findCommentByPostId: {}", commentByPostId);
 
 
     }

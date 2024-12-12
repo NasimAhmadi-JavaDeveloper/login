@@ -55,8 +55,8 @@ public class FollowService {
 
     @Retryable(maxAttempts = 3)
     public List<FollowResponse> getFollowings(int userId) {
-        User user =  userService.getUser(userId);
-        List<Follow> byFrom = followRepository.findByFrom(user);
+        User user = userService.getUser(userId);
+        List<Follow> byFrom = followRepository.findByFrom(user);//todo ?? Lock wait timeout exceeded; try restarting transaction
         return byFrom
                 .stream()
                 .map(followMapper::toDto)

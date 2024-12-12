@@ -27,7 +27,8 @@ public enum ExceptionSpec {
     COMMENT_NOT_FOUND("comment not found", HttpStatus.BAD_REQUEST),
     NOT_YOUR_COMMENT("not_your_comment", HttpStatus.BAD_REQUEST),
     SELF_FOLLOW_NOT_ALLOWED("You cannot follow yourself", HttpStatus.BAD_REQUEST),
-    ALREADY_FOLLOWING_USER("Already following this user",HttpStatus.BAD_REQUEST)
+    ALREADY_FOLLOWING_USER("Already following this user",HttpStatus.BAD_REQUEST),
+    CATEGORY_NOT_FOUND("Category not found" ,HttpStatus.BAD_REQUEST),
 
     ;
     private final String message;
