@@ -17,31 +17,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             " order by HOUR(p.createdAt)")
     List<PostStatsDto> countPostsByHour();
 
-    //--Practice Query --
     @Query("FROM Post p WHERE p.user.id = :userId")
     List<Post> findUserPosts(@Param("userId") int userId);
-
-
-
-    //----
-//    @Query("SELECT COUNT(DISTINCT CAST(p.createdAt AS date))" +
-//            "FROM Post p " +
-//            "JOIN p.likes l " +
-//            "WHERE p.user.id = :userId " +
-//            "AND l.id <> :userId " +
-//            "AND p.createdAt BETWEEN :startDate AND :endDate")
-//    long countDistinctLikedDatesByUserAndDateRange(@Param("userId") Integer userId,
-//                                                   @Param("startDate") LocalDateTime startDate,
-//                                                   @Param("endDate") LocalDateTime endDate);
-
-
-//    @Query("SELECT DATE(l.createdAt) AS likeDate, p.user AS user "
-//            + "FROM Post p "
-//            + "JOIN p.likes l "
-//            + "WHERE p.user.id = :userId "
-//            + "AND l.createdAt BETWEEN :startDate AND :endDate")
-//    List<LikeProjection> findLikeDataByUserIdAndDateRange(@Param("userId") Integer userId,
-//                                                          @Param("startDate") LocalDateTime startDate,
-//                                                          @Param("endDate") LocalDateTime endDate);
 
 }

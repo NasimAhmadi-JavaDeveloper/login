@@ -7,15 +7,12 @@ import com.example.login.service.PostService;
 import com.example.login.utils.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -81,31 +78,9 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostStatsByHour());
     }
 
-//    @GetMapping("/liked-days")
-//    public ResponseEntity<Long> getDaysUserLikedNewUsers(
-//            @RequestParam Integer userId,
-//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-//
-//        LocalDateTime startDateTime = startDate.atStartOfDay();
-//        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
-//        return ResponseEntity.ok(postService.countDaysUserLikedNewUsers(userId, startDateTime, endDateTime));
-//    }
-
     @GetMapping("/user-posts")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<PostResponse>> getUserPosts(@RequestParam int userId) {
         return ResponseEntity.ok(postService.getUserPosts(userId));
-    }
-
-    @GetMapping("/count-liked-days")
-    public ResponseEntity<Long> getCountDaysUserLikedNewUsers(
-            @RequestParam Integer userId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-
-        LocalDateTime startDateTime = startDate.atStartOfDay();
-        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
-        return ResponseEntity.ok(postService.countDaysWithNewLikes(userId, startDateTime, endDateTime));
     }
 }

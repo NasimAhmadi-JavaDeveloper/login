@@ -217,12 +217,12 @@ public class UserService {
 
     public Page<UserReportResponse> getUserReports(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return null;// userRepository.getUserReports(pageable);
+        return userRepository.getUserReports(pageable);
     }
 
     public Page<UserReportResponse> getUserReportsSearchKey(int page, int size ,String searchKey) {
         Pageable pageable = PageRequest.of(page, size);
-        return null ;//userRepository.getUserReportsSearchKey(pageable , searchKey);
+        return userRepository.getUserReportsSearchKey(pageable , searchKey);
     }
 
 }

@@ -14,8 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -113,47 +115,6 @@ public class PostService {
                 .stream()
                 .map(postMapper::toDto)
                 .collect(Collectors.toList());
-    }
-
-//    public long countDaysUserLikedNewUsers(Integer userId, LocalDateTime startDate, LocalDateTime endDate) {
-//        return postRepository.countDistinctLikedDatesByUserAndDateRange(userId, startDate, endDate);
-//    }
-
-    public long countDaysWithNewLikes(Integer userId, LocalDateTime startDate, LocalDateTime endDate) {
-        // Fetch all likes data for the given user and date range
-        //List<LikeProjection> likeData = postRepository.findLikeDataByUserIdAndDateRange(userId, startDate, endDate);
-
-//        Map<LocalDate, List<User>> groupedLikes = likeData.stream()
-//                .collect(Collectors.groupingBy(
-//                        LikeProjection::getLikeDate,
-//                        Collectors.mapping(LikeProjection::getUser, Collectors.toList())
-//                ));
-
-        Set<Integer> seenUsers = new HashSet<>();
-        long count = 0;
-
-//        List<LocalDate> likesDate = groupedLikes
-//                .keySet()
-//                .stream()
-//                .sorted()
-//                .collect(Collectors.toList());
-//
-//        for (LocalDate date : likesDate) {
-//            List<User> likedUsers = groupedLikes.get(date);
-//            boolean hasNewUser = false;
-//
-//            for (User user : likedUsers) {
-//                if (seenUsers.add(user.getId())) {
-//                    hasNewUser = true;
-//                }
-//            }
-//            if (hasNewUser) {
-//                count++;
-//            }
-//        }
-//
-//        return count;
-        return 2;
     }
 
 }
