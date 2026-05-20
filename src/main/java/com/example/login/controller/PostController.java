@@ -81,16 +81,16 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostStatsByHour());
     }
 
-    @GetMapping("/liked-days")
-    public ResponseEntity<Long> getDaysUserLikedNewUsers(
-            @RequestParam Integer userId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-
-        LocalDateTime startDateTime = startDate.atStartOfDay();
-        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
-        return ResponseEntity.ok(postService.countDaysUserLikedNewUsers(userId, startDateTime, endDateTime));
-    }
+//    @GetMapping("/liked-days")
+//    public ResponseEntity<Long> getDaysUserLikedNewUsers(
+//            @RequestParam Integer userId,
+//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+//
+//        LocalDateTime startDateTime = startDate.atStartOfDay();
+//        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
+//        return ResponseEntity.ok(postService.countDaysUserLikedNewUsers(userId, startDateTime, endDateTime));
+//    }
 
     @GetMapping("/user-posts")
     @PreAuthorize("hasRole('USER')")

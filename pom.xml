@@ -19,7 +19,6 @@
         <mapstruct.version>1.4.1.Final</mapstruct.version>
         <springdoc-openapi.version>1.6.14</springdoc-openapi.version>
         <protostuff.version>1.7.4</protostuff.version>
-        <mysql-connector.version>8.0.24</mysql-connector.version>
         <java.mail.version>1.5.5</java.mail.version>
     </properties>
     <dependencies>
@@ -65,11 +64,6 @@
             <version>${jwt.version}</version>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql-connector.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
@@ -107,6 +101,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>login</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

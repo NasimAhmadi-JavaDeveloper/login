@@ -37,7 +37,6 @@ public class WebSecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-//                .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .antMatchers(anonPaths).permitAll()
                 .anyRequest()
                 .authenticated()
@@ -58,18 +57,18 @@ public class WebSecurityConfig {
                 .contentTypeOptions()
                 .and()
                 .contentSecurityPolicy(
-                        "default-src 'self'; script-src 'self' <"
-                                + "https://frontend.com"
-                                + "> frame-ancestors 'self';")
+                        "default-src 'self'; " +
+                                "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://frontend.com; " +
+                                "style-src 'self' 'unsafe-inline'; " +
+                                "frame-ancestors 'self';"
+                )
                 .and()
                 .httpStrictTransportSecurity()
                 .includeSubDomains(true)
                 .maxAgeInSeconds(31536000);
 
-        return http
-                .build();
+        return http.build();
     }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
