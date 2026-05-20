@@ -1,6 +1,6 @@
 package com.example.login.model.entity;
 
-import com.example.login.enumeration.Role;
+import com.example.login.enums.Role;
 import com.example.login.model.converter.CryptoConverter;
 import lombok.*;
 import lombok.experimental.Accessors;

@@ -1,7 +1,7 @@
 package com.example.login.filters;
 
 
-import com.example.login.enumeration.LogType;
+import com.example.login.enums.LogType;
 import com.example.login.model.entity.Log;
 import com.example.login.repository.LogRepository;
 import com.example.login.security.SecurityUtil;

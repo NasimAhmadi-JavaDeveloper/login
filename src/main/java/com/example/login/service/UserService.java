@@ -1,6 +1,6 @@
 package com.example.login.service;
 
-import com.example.login.enumeration.Role;
+import com.example.login.enums.Role;
 import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
 import com.example.login.mapper.UserMapper;

@@ -1,6 +1,6 @@
 package com.example.login.model.entity;
 
-import com.example.login.model.enums.Emoji;
+import com.example.login.enums.Emoji;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

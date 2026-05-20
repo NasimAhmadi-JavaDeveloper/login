@@ -1,6 +1,6 @@
 package com.example.login.model.request;
 
-import com.example.login.enumeration.Role;
+import com.example.login.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
