@@ -30,9 +30,13 @@ public enum ExceptionSpec {
     ALREADY_FOLLOWING_USER("Already following this user",HttpStatus.BAD_REQUEST),
     CATEGORY_NOT_FOUND("Category not found" ,HttpStatus.BAD_REQUEST),
     FORBIDDEN_WORD_NOT_FOUND("Forbidden word not found" ,HttpStatus.BAD_REQUEST),
-    DUPLICATE_FORBIDDEN_WORD("Forbidden word already exists",  HttpStatus.CONFLICT);
+    DUPLICATE_FORBIDDEN_WORD("Forbidden word already exists", HttpStatus.CONFLICT),
+    COMMENT_CONTAINS_BAN_WORD("Your comment contains ban word", HttpStatus.BAD_REQUEST),
+    USER_BLOCKED_DUE_TO_BAN_WORD("User has been blocked due to repeated ban word", HttpStatus.BAD_REQUEST),
+    USER_ALREADY_BLOCKED("User is blocked and cannot perform this action", HttpStatus.BAD_REQUEST),
 
 
+;
     private final String message;
     private final HttpStatus httpStatus;
 }

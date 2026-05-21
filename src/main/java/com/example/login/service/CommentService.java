@@ -1,15 +1,16 @@
 package com.example.login.service;
 
+import com.example.login.enums.Emoji;
 import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
 import com.example.login.mapper.CommentMapper;
 import com.example.login.model.entity.Comment;
 import com.example.login.model.entity.Post;
 import com.example.login.model.entity.User;
-import com.example.login.enums.Emoji;
 import com.example.login.model.response.CommentResponse;
 import com.example.login.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class CommentService {
     private final PostService postService;
     private final CommentMapper commentMapper;
     private final CommentRepository commentRepository;
+    private final ForbiddenWordService forbiddenWordService;
+    @Value("${countBanWord}")
+    private int countBanWord;
 
     public Page<CommentResponse> getComments(long postId, int page, int size) {
         return commentRepository.findAllComment(postId, PageRequest.of(page, size))
@@ -31,8 +35,16 @@ public class CommentService {
     }
 
     public void sendComment(int userId, long postId, String comment, Emoji emoji) {
-         User user = userService.getUser(userId);
-         Post post = postService.getPost(postId);
+        userService.checkUserIsBlocked(userId);
+
+        User user = userService.getUser(userId);
+        Post post = postService.getPost(postId);
+
+        boolean hasBanWord = forbiddenWordService.containsForbiddenWord(comment);
+
+        if (hasBanWord) {
+            userService.registerBanWordCount(userId);
+        }
 
         commentRepository.save(new Comment()
                 .setCommentText(comment)

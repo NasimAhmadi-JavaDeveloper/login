@@ -58,6 +58,12 @@ public class User extends BaseEntity {
     @Basic(fetch = FetchType.LAZY)
     private String bio;
 
+    @ColumnDefault("0")
+    private Integer banWordCount;
+
+    @ColumnDefault("0")
+    private boolean blocked;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 

@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @Transactional
@@ -40,5 +42,19 @@ public class ForbiddenWordService {
         forbiddenWordRepository.delete(forbiddenWord);
 
         log.info("User {} deleted forbidden word: {}", Utils.getCurrentUserId(), forbiddenWord.getWord());
+    }
+
+    public boolean containsForbiddenWord(String text) {
+
+        List<ForbiddenWord> forbiddenWords = forbiddenWordRepository.findAll();
+
+        if (forbiddenWords.isEmpty()) {
+            return false;
+        }
+
+        String lowerCaseText = text.toLowerCase();
+
+        return forbiddenWords.stream()
+                .anyMatch(fw -> lowerCaseText.toLowerCase().contains(fw.getWord().toLowerCase()));
     }
 }

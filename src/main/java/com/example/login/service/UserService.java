@@ -44,6 +44,8 @@ public class UserService {
     private final UpdateUserService updateUserService;
     @Value("${security.lock-time-duration-seconds:1800}")
     public long lockTimeDurationSeconds;
+    @Value("${countBanWord}")
+    private int countBanWord;
     private static final int ZERO = 0;
     private final PasswordEncoder passwordEncoder;
 
@@ -220,9 +222,55 @@ public class UserService {
         return userRepository.getUserReports(pageable);
     }
 
-    public Page<UserReportResponse> getUserReportsSearchKey(int page, int size ,String searchKey) {
+    public Page<UserReportResponse> getUserReportsSearchKey(int page, int size, String searchKey) {
         Pageable pageable = PageRequest.of(page, size);
-        return userRepository.getUserReportsSearchKey(pageable , searchKey);
+        return userRepository.getUserReportsSearchKey(pageable, searchKey);
     }
 
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
+    public void registerBanWordCount(int userId) {
+        User user = getUser(userId);
+
+        if (user.isBlocked()) {
+            log.info("User {} is blocked and cannot perform this action", userId);
+            throw new LogicalException(ExceptionSpec.USER_ALREADY_BLOCKED);
+        }
+
+        int currentBanWordCount = user.getBanWordCount() == null ? 0 : user.getBanWordCount();
+
+        user.setBanWordCount(currentBanWordCount + 1);
+
+        if (user.getBanWordCount() >= countBanWord) {
+            blockUser(userId);
+            throw new LogicalException(ExceptionSpec.USER_BLOCKED_DUE_TO_BAN_WORD);
+        } else {
+            log.info("User {} has {} forbidden word violation(s)", userId, user.getBanWordCount());
+            throw new LogicalException(ExceptionSpec.COMMENT_CONTAINS_BAN_WORD);
+        }
+    }
+
+    public void blockUser(int userId) {
+        User user = getUser(userId);
+        user.setBlocked(true);
+        userRepository.save(user);
+        log.warn("User {} has been blocked due to repeated ban words", userId);
+    }
+
+    public void unblockUser(int userId) {
+        User user = getUser(userId);
+        user.setBlocked(false);
+        user.setBanWordCount(0);
+        userRepository.save(user);
+        log.info("User {} has been unblocked by admin", userId);
+    }
+
+    public void checkUserIsBlocked(int userId) {
+        User user = getUser(userId);
+        if (user.isBlocked()) {
+            throw new LogicalException(ExceptionSpec.USER_ALREADY_BLOCKED);
+        }
+    }
 }
