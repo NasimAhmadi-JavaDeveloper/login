@@ -37,11 +37,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             + " WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :searchKey, '%')) "
             + " OR LOWER(u.email) LIKE LOWER(CONCAT('%', :searchKey, '%')) "
             + " GROUP BY u.id")
-    Page<UserReportResponse> getUserReportsSearchKey(Pageable pageable ,@Param("searchKey") String searchKey);
-
-
-
-
+    Page<UserReportResponse> getUserReportsSearchKey(Pageable pageable, @Param("searchKey") String searchKey);
 
 }
 

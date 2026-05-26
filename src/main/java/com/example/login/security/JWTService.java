@@ -6,7 +6,6 @@ import com.example.login.model.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -36,11 +35,11 @@ public class JWTService {
                 .sign(HMAC512(jwtSecret));
     }
 
-    public UserDetails decode(String token) {
+    public CustomUserDetails decode(String token) {
         DecodedJWT decodedJWT = JWT.require(HMAC512(jwtSecret))
                 .build()
                 .verify(token);
-        long userId = Long.parseLong(decodedJWT.getSubject());
+        int userId = Integer.parseInt(decodedJWT.getSubject());
         String userName = decodedJWT.getClaim("userName").asString();
         String email = decodedJWT.getClaim("email").asString();
         String phone = decodedJWT.getClaim("phone").asString();

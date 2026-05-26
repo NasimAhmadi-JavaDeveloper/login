@@ -22,14 +22,14 @@ public class AuthService {
 
     public LoginResponse login(String userName, char[] password) {
 
-        if (redisService.isUserLocked(userName)) {
-            throw new LogicalException(ExceptionSpec.USER_LOCKED);
-        }
+//        if (redisService.isUserLocked(userName)) {
+//            throw new LogicalException(ExceptionSpec.USER_LOCKED);
+//        }
 
         User user = userService.getUserByName(userName);
 
         if (passwordEncoder.matches(String.valueOf(password), String.valueOf(user.getPassword()))) {
-            redisService.resetFailedAttempts(userName);
+           // redisService.resetFailedAttempts(userName);
             String token = jwtService.generateEncodeAccessToken(user);
             return new LoginResponse(token);
         } else {

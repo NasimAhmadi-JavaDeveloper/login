@@ -32,8 +32,8 @@ public enum ExceptionSpec {
     FORBIDDEN_WORD_NOT_FOUND("Forbidden word not found" ,HttpStatus.BAD_REQUEST),
     DUPLICATE_FORBIDDEN_WORD("Forbidden word already exists", HttpStatus.CONFLICT),
     COMMENT_CONTAINS_BAN_WORD("Your comment contains ban word", HttpStatus.BAD_REQUEST),
-    USER_BLOCKED_DUE_TO_BAN_WORD("User has been blocked due to repeated ban word", HttpStatus.BAD_REQUEST),
-    USER_ALREADY_BLOCKED("User is blocked and cannot perform this action", HttpStatus.BAD_REQUEST),
+    USER_ALREADY_BLOCKED("User has been blocked due to repeated ban word, until admin un block it", HttpStatus.BAD_REQUEST),
+    BAN_WORD_DETECTED("Your comment contains ban word. Please remove them and try again.", HttpStatus.BAD_REQUEST),
 
 
 ;

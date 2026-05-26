@@ -4,11 +4,9 @@ import com.example.login.enums.Role;
 import com.example.login.model.converter.CryptoConverter;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,11 +43,6 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
 
-    @ColumnDefault("0")
-    private Integer failedLoginAttempts;
-
-    private LocalDateTime lockTimeDuration;
-
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private String profilePicture;
@@ -57,12 +50,6 @@ public class User extends BaseEntity {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private String bio;
-
-    @ColumnDefault("0")
-    private Integer banWordCount;
-
-    @ColumnDefault("0")
-    private boolean blocked;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
@@ -76,4 +63,7 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "to", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> followers = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_detail_id", unique = true)
+    private UserDetail userDetail;
 }

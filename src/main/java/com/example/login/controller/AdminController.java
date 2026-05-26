@@ -1,6 +1,7 @@
 package com.example.login.controller;
 
 import com.example.login.model.request.UserRequest;
+import com.example.login.service.UserDetailService;
 import com.example.login.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,7 @@ import javax.validation.Valid;
 public class AdminController {
 
     private final UserService service;
+    private final UserDetailService userDetailService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/user")
@@ -24,6 +26,6 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/user/{userId}/unblock")
     public void unblockUser(@PathVariable int userId) {
-        service.unblockUser(userId);
+        userDetailService.unblockUser(userId);
     }
 }

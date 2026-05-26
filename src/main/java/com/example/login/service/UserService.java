@@ -1,11 +1,8 @@
 package com.example.login.service;
 
-import com.example.login.enums.Role;
 import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
 import com.example.login.mapper.UserMapper;
-import com.example.login.model.entity.Comment;
-import com.example.login.model.entity.Post;
 import com.example.login.model.entity.User;
 import com.example.login.model.request.PatchUserRequest;
 import com.example.login.model.request.UserRequest;
@@ -26,9 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
 
 @Slf4j
@@ -44,8 +38,6 @@ public class UserService {
     private final UpdateUserService updateUserService;
     @Value("${security.lock-time-duration-seconds:1800}")
     public long lockTimeDurationSeconds;
-    @Value("${countBanWord}")
-    private int countBanWord;
     private static final int ZERO = 0;
     private final PasswordEncoder passwordEncoder;
 
@@ -94,20 +86,6 @@ public class UserService {
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
     }
 
-    public boolean isUserLocked(User user) {
-        if (user.getLockTimeDuration() == null) {
-            return false;
-        }
-
-        if (LocalDateTime.now().isAfter(user.getLockTimeDuration())) {
-            user.setFailedLoginAttempts(ZERO);
-            userRepository.save(user);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public User getUserByName(String userName) {
         return userRepository.findByUserName(userName)
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.USER_NOT_FOUND));
@@ -134,88 +112,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    //cascade
-    public void testCascadeMergeThereIsUserPostIsNew() {
-        User user = getUserByName("test222222");
-        Post post = new Post()
-                .setCaption("test44")
-                .setVisitCount(0)
-                .setImageUrls(Arrays.asList("https://test44", "https://test44"))
-                .setUser(user)
-                .setTag(Arrays.asList("#spring44 boot444", "#List444", "#Set44"));
-
-        user.getPosts().add(post); //post saved
-        userRepository.save(user);
-    }
-
-    public void testCascadePersistUserIsNewPostIsNew() {
-        User user = new User()
-                .setUserName("namenew1111")
-                .setPhone("95779543107")
-                .setPassword(passwordEncoder.encode("name1123456789"))
-                .setRole(Role.ROLE_USER);
-
-        Post post = new Post()
-                .setCaption("test11111111")
-                .setVisitCount(0)
-                .setImageUrls(Arrays.asList("https://test11111", "https://test1111111"))
-                .setUser(user)
-                .setTag(Arrays.asList("#spring44 boot444", "#List444", "#Set44"));
-
-        user.getPosts().add(post);
-        userRepository.save(user); //user saved and post saved too
-    }
-
-    public void testCascadeAllWithoutOrphanRemoval() { //OrphanRemoval = false
-        User user = getUserByName("namenew1111");
-        user.getPosts().remove(0); //this post does not deleted in post table
-        userRepository.save(user);
-    }
-
-    public void testCascadeAllWithoutOrphanRemovalUserNameChange() { //OrphanRemoval = false
-        User user = getUserByName("namenew1111");
-        user.setUserName("test2121");//name changes
-        user.getPosts().remove(0);//this post does not deleted in post table
-        userRepository.save(user);
-    }
-
-    public void testCascadeAllWithOrphanRemovalTrue() {
-        User user = getUserByName("test2121");
-        user.getPosts().remove(0); // this post deleted in post table
-        userRepository.save(user);
-    }
-
-    public void testCascadeMerge() {
-        User user = getUserByName("test2121");
-        Post post = user.getPosts().get(0);
-
-        user.setUserName("setUser");
-        post.setCaption("setCaption");
-        userRepository.save(user);
-    }
-
-    public void testCascadeAllWithOrphanRemovalTrueUserDeletedPostAndCommentDeleted() {
-        User user = new User()
-                .setUserName("john_doe")
-                .setPhone("95779543000")
-                .setPassword(passwordEncoder.encode("pass123456789"))
-                .setEmail("john@example.com");
-
-        Post post = new Post()
-                .setCaption("Hello World!")
-                .setUser(user);
-
-        Comment comment = new Comment()
-                .setCommentText("Great post!")
-                .setUser(user)
-                .setPost(post);
-
-        user.setPosts(Collections.singletonList(post));
-        user.setComments(Collections.singletonList(comment));
-
-        userRepository.save(user);
-        userRepository.delete(user);
-    }
 
     public Page<UserReportResponse> getUserReports(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -231,46 +127,4 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void registerBanWordCount(int userId) {
-        User user = getUser(userId);
-
-        if (user.isBlocked()) {
-            log.info("User {} is blocked and cannot perform this action", userId);
-            throw new LogicalException(ExceptionSpec.USER_ALREADY_BLOCKED);
-        }
-
-        int currentBanWordCount = user.getBanWordCount() == null ? 0 : user.getBanWordCount();
-
-        user.setBanWordCount(currentBanWordCount + 1);
-
-        if (user.getBanWordCount() >= countBanWord) {
-            blockUser(userId);
-            throw new LogicalException(ExceptionSpec.USER_BLOCKED_DUE_TO_BAN_WORD);
-        } else {
-            log.info("User {} has {} forbidden word violation(s)", userId, user.getBanWordCount());
-            throw new LogicalException(ExceptionSpec.COMMENT_CONTAINS_BAN_WORD);
-        }
-    }
-
-    public void blockUser(int userId) {
-        User user = getUser(userId);
-        user.setBlocked(true);
-        userRepository.save(user);
-        log.warn("User {} has been blocked due to repeated ban words", userId);
-    }
-
-    public void unblockUser(int userId) {
-        User user = getUser(userId);
-        user.setBlocked(false);
-        user.setBanWordCount(0);
-        userRepository.save(user);
-        log.info("User {} has been unblocked by admin", userId);
-    }
-
-    public void checkUserIsBlocked(int userId) {
-        User user = getUser(userId);
-        if (user.isBlocked()) {
-            throw new LogicalException(ExceptionSpec.USER_ALREADY_BLOCKED);
-        }
-    }
 }

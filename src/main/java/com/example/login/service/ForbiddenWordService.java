@@ -9,10 +9,11 @@ import com.example.login.repository.ForbiddenWordRepository;
 import com.example.login.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Arrays;
 
 @Slf4j
 @Service
@@ -44,17 +45,11 @@ public class ForbiddenWordService {
         log.info("User {} deleted forbidden word: {}", Utils.getCurrentUserId(), forbiddenWord.getWord());
     }
 
-    public boolean containsForbiddenWord(String text) {
-
-        List<ForbiddenWord> forbiddenWords = forbiddenWordRepository.findAll();
-
-        if (forbiddenWords.isEmpty()) {
-            return false;
+    public boolean containsBanWord(String text) {
+        if (StringUtils.isNotBlank(text)) {
+            String[] words = text.split("\\s+");
+            return forbiddenWordRepository.existsByWordIn(Arrays.asList(words));
         }
-
-        String lowerCaseText = text.toLowerCase();
-
-        return forbiddenWords.stream()
-                .anyMatch(fw -> lowerCaseText.toLowerCase().contains(fw.getWord().toLowerCase()));
+        return false;
     }
 }

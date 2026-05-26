@@ -22,7 +22,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @Operation(summary = "Get comments for a specific post")
-    @GetMapping("comment/{postId}")
+    @GetMapping("/{postId}")
     public Page<CommentResponse> getComment(@PathVariable("postId") long postId,
                                             @RequestParam(defaultValue = "0") int page,
                                             @RequestParam(defaultValue = "5") int size) {
@@ -30,8 +30,8 @@ public class CommentController {
     }
 
     @Operation(summary = "Add a new comment to a specific post by the current user.")
-    @PostMapping("comment/{postId}")
-    public void sendComment(@PathVariable("postId") long postId, @RequestBody @Valid CommentRequest request) {
+    @PostMapping("/{postId}")
+    public void sendComment(@PathVariable("postId") long postId,@Valid @RequestBody CommentRequest request) {
         commentService.sendComment(Utils.getCurrentUserId(), postId, request.getComment(), null);
     }
 
@@ -42,7 +42,7 @@ public class CommentController {
     }
 
     @Operation(summary = "Delete a comment")
-    @DeleteMapping("comment")
+    @DeleteMapping
     public void deleteComment(@RequestParam long commentId) {
         commentService.removeComment(Utils.getCurrentUserId(), commentId);
     }
