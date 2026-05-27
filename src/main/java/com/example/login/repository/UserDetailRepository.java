@@ -27,7 +27,7 @@ public interface UserDetailRepository extends JpaRepository<UserDetail, Integer>
 
     @Modifying
     @Transactional
-    @Query("UPDATE UserDetail u SET u.blocked = false WHERE u.id = :userId")
+    @Query("UPDATE UserDetail u SET u.blocked = false ,u.banWordCount = 0 WHERE u.id = :userId")
     void unblockUser(@Param("userId") Integer userId);
 
 }

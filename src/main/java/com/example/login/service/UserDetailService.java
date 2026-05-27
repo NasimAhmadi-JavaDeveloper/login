@@ -25,7 +25,10 @@ public class UserDetailService {
     }
 
     public void createUserDetailWithBanWordCount(User user) {
-        UserDetail userDetail = new UserDetail().setBanWordCount(1);
+        UserDetail userDetail = UserDetail.builder()
+                .banWordCount(1)
+                .user(user)
+                .build();
         user.setUserDetail(userDetail);
         userDetailRepository.save(userDetail);
     }

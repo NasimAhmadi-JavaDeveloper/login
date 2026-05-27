@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface PostRepository extends JpaRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Integer> {
 
     @Query("SELECT new com.example.login.model.dto.PostStatsDto(" +
             " HOUR(p.createdAt), COALESCE(COUNT(p),0)) " +

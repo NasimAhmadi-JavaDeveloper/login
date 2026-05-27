@@ -7,7 +7,6 @@ import com.example.login.service.PostService;
 import com.example.login.utils.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -36,13 +35,13 @@ public class PostController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<PostResponse> getPostById(@PathVariable Long id) {
+    public ResponseEntity<PostResponse> getPostById(@PathVariable Integer id) {
         return ResponseEntity.ok(postService.getPostById(id));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePost(@PathVariable Integer id) {
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }
@@ -53,7 +52,7 @@ public class PostController {
             summary = "Like to a post",
             description = "Allows a user to like a post"
     )
-    public void sendLike(@PathVariable("postId") long postId) {
+    public void sendLike(@PathVariable("postId") int postId) {
         postService.addLike(Utils.getCurrentUserId(), postId);
     }
 
@@ -65,12 +64,6 @@ public class PostController {
     )
     public void disLike(@PathVariable("postId") long postId) {
         postService.disLike(Utils.getCurrentUserId(), postId);
-    }
-
-    @GetMapping("/cascade-persist")
-    public ResponseEntity<String> testCascadePersist() {
-        postService.testCascadePersist();
-        return ResponseEntity.status(HttpStatus.CREATED).body("successfully");
     }
 
     @GetMapping("/post-stats")

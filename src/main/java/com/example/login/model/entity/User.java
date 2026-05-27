@@ -63,7 +63,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "to", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> followers = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_detail_id", unique = true)
+    @OneToOne(mappedBy = "user")
     private UserDetail userDetail;
 }

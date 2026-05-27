@@ -5,11 +5,12 @@ import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
 import com.example.login.mapper.CommentMapper;
 import com.example.login.model.entity.Comment;
-import com.example.login.model.entity.Post;
 import com.example.login.model.entity.User;
 import com.example.login.model.entity.UserDetail;
 import com.example.login.model.response.CommentResponse;
 import com.example.login.repository.CommentRepository;
+import com.example.login.repository.PostRepository;
+import com.example.login.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,25 +24,25 @@ public class CommentService {
 
     private final ConfigService configService;
     private final UserService userService;
-    private final PostService postService;
     private final CommentMapper commentMapper;
     private final CommentRepository commentRepository;
     private final ForbiddenWordService forbiddenWordService;
     private final UserDetailService userDetailService;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     public Page<CommentResponse> getComments(long postId, int page, int size) {
         return commentRepository.findAllComment(postId, PageRequest.of(page, size))
                 .map(commentMapper::toCommentResponse);
     }
 
-    public void sendComment(int userId, long postId, String comment, Emoji emoji) {
-        User user = userService.getUser(userId);
+    public void sendComment(int userId, int postId, String comment, Emoji emoji) {
 
         if (containsBanWord(comment)) {
+            User user = userService.getUser(userId);
             handleBanWordViolation(user);
         } else {
-            Post post = postService.getPost(postId);
-            createComment(comment, emoji, post, user);
+            createComment(comment, emoji, postId, userId);
         }
     }
 
@@ -78,12 +79,12 @@ public class CommentService {
         throw new LogicalException(ExceptionSpec.BAN_WORD_DETECTED);
     }
 
-    private void createComment(String comment, Emoji emoji, Post post, User user) {
+    private void createComment(String comment, Emoji emoji, int postId, int userId) {
         commentRepository.save(new Comment()
                 .setCommentText(comment)
                 .setEmoji(emoji)
-                .setPost(post)
-                .setUser(user));
+                .setPost(postRepository.getById(postId))
+                .setUser(userRepository.getById(userId)));
     }
 
     public void removeComment(int userId, long commentId) {

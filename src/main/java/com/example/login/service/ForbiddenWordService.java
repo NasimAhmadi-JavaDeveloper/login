@@ -48,7 +48,7 @@ public class ForbiddenWordService {
     public boolean containsBanWord(String text) {
         if (StringUtils.isNotBlank(text)) {
             String[] words = text.split("\\s+");
-            return forbiddenWordRepository.existsByWordIn(Arrays.asList(words));
+            return forbiddenWordRepository.existsByWordIgnoreCaseIn(Arrays.asList(words));
         }
         return false;
     }

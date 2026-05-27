@@ -4,7 +4,6 @@ import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
 import com.example.login.mapper.PostMapper;
 import com.example.login.model.dto.PostStatsDto;
-import com.example.login.model.entity.Comment;
 import com.example.login.model.entity.Post;
 import com.example.login.model.entity.User;
 import com.example.login.model.request.PostRequest;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -49,19 +47,19 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public PostResponse getPostById(Long id) {
+    public PostResponse getPostById(Integer id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.POST_NOT_FOUND));
         return postMapper.toDto(post);
     }
 
-    public void deletePost(Long id) {
+    public void deletePost(Integer id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.POST_NOT_FOUND));
         postRepository.delete(post);
     }
 
-    public void addLike(int userId, long postId) {
+    public void addLike(int userId, int postId) {
         final User user = userService.getUser(userId);
         final Post post = getPost(postId);
 
@@ -73,42 +71,18 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public Post getPost(long postId) {
+    public Post getPost(Integer postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new LogicalException(ExceptionSpec.POST_NOT_FOUND));
     }
 
     public void disLike(int userId, long postId) {
 
-
-    }
-
-    public void testCascadePersist() {
-        Post post = new Post()
-                .setCaption("test11")
-                .setVisitCount(0)
-                .setImageUrls(Arrays.asList("https://test2", "https://test3"))
-                .setUser(userService.getUser(2))
-                .setTag(Arrays.asList("#spring11 boot111", "#List11", "#Set11"));
-
-        Comment comment1 = new Comment()
-                .setCommentText("Great post!")
-                .setPost(post)
-                .setUser(userService.getUser(2));
-
-        Comment comment2 = new Comment()
-                .setCommentText("Nice picture!")
-                .setPost(post)
-                .setUser(userService.getUser(2));
-
-        post.setComments(Arrays.asList(comment1, comment2));
-        postRepository.save(post);
     }
 
     public List<PostStatsDto> getPostStatsByHour() {
         return postRepository.countPostsByHour();
     }
-
 
     public List<PostResponse> getUserPosts(int userId) {
         return postRepository.findUserPosts(userId)

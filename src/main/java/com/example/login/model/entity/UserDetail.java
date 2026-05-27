@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 public class UserDetail extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ColumnDefault("0")
@@ -36,4 +35,9 @@ public class UserDetail extends BaseEntity {
     private Integer failedLoginAttempts;
 
     private LocalDateTime lockTimeDuration;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId  // Uses User's ID as primary key
+    @JoinColumn(name = "id")
+    private User user;
 }

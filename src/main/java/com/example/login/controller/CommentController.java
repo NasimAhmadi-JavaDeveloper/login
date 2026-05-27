@@ -31,13 +31,13 @@ public class CommentController {
 
     @Operation(summary = "Add a new comment to a specific post by the current user.")
     @PostMapping("/{postId}")
-    public void sendComment(@PathVariable("postId") long postId,@Valid @RequestBody CommentRequest request) {
+    public void sendComment(@PathVariable("postId") int postId,@Valid @RequestBody CommentRequest request) {
         commentService.sendComment(Utils.getCurrentUserId(), postId, request.getComment(), null);
     }
 
     @Operation(summary = "React with an emoji to a post")
     @PostMapping("emoji/{postId}")
-    public void sendEmoji(@PathVariable("postId") long postId, @RequestBody @Valid CommentEmojiRequest request) {
+    public void sendEmoji(@PathVariable("postId") int postId, @RequestBody @Valid CommentEmojiRequest request) {
         commentService.sendComment(Utils.getCurrentUserId(), postId, null, request.getEmoji());
     }
 
