@@ -1,6 +1,6 @@
 package com.example.login.model.converter;
 
-import com.example.login.exception.ExceptionSpec;
+import com.example.login.model.enums.ExceptionSpec;
 import com.example.login.exception.LogicalException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

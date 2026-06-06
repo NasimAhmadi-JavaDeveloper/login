@@ -1,6 +1,6 @@
 package com.example.login.security.filter;
 
-import com.example.login.exception.ExceptionSpec;
+import com.example.login.model.enums.ExceptionSpec;
 import com.example.login.exception.LogicalException;
 import com.example.login.model.response.ErrorResponse;
 import com.example.login.repository.UserDetailRepository;

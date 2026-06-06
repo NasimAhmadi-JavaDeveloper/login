@@ -1,5 +1,8 @@
-package com.example.login.exception;
+package com.example.login.exception.handler;
 
+import com.example.login.exception.LogicalException;
+import com.example.login.exception.OtpEmailException;
+import com.example.login.model.enums.ExceptionSpec;
 import com.example.login.model.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
