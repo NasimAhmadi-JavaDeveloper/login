@@ -34,6 +34,8 @@ public enum ExceptionSpec {
     COMMENT_CONTAINS_BAN_WORD("Your comment contains ban word", HttpStatus.BAD_REQUEST),
     USER_ALREADY_BLOCKED("User has been blocked due to repeated ban word, until admin un block it", HttpStatus.BAD_REQUEST),
     BAN_WORD_DETECTED("Your comment contains ban word. Please remove them and try again.", HttpStatus.BAD_REQUEST),
+    CLIENT_ERROR("Satellite client error", HttpStatus.BAD_REQUEST),
+    SERVICE_UNAVAILABLE("Satellite Unavailable", HttpStatus.SERVICE_UNAVAILABLE)
 
 
 ;
