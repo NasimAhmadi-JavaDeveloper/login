@@ -1,9 +1,9 @@
 package com.example.login.service;
 
-import com.example.login.enums.Emoji;
+import com.example.login.model.enums.Emoji;
 import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
-import com.example.login.mapper.CommentMapper;
+import com.example.login.model.mapper.CommentMapper;
 import com.example.login.model.entity.Comment;
 import com.example.login.model.entity.User;
 import com.example.login.model.entity.UserDetail;

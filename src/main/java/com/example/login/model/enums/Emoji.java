@@ -1,4 +1,4 @@
-package com.example.login.enums;
+package com.example.login.model.enums;
 
 public enum Emoji {
     CAKE, WINE, BOMB

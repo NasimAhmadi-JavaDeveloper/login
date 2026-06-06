@@ -1,6 +1,6 @@
 package com.example.login.model.request;
 
-import com.example.login.enums.Emoji;
+import com.example.login.model.enums.Emoji;
 import lombok.Getter;
 import lombok.Setter;
 

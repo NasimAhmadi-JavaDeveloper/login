@@ -1,4 +1,4 @@
-package com.example.login.mapper;
+package com.example.login.model.mapper;
 
 import com.example.login.model.entity.Post;
 import com.example.login.model.request.PostRequest;

@@ -1,6 +1,6 @@
 package com.example.login.model.response;
 
-import com.example.login.enums.Role;
+import com.example.login.model.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,7 @@
 package com.example.login.model.entity;
 
-import com.example.login.enums.LogType;
+
+import com.example.login.model.enums.LogType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

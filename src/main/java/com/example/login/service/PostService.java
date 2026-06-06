@@ -2,7 +2,7 @@ package com.example.login.service;
 
 import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
-import com.example.login.mapper.PostMapper;
+import com.example.login.model.mapper.PostMapper;
 import com.example.login.model.dto.PostStatsDto;
 import com.example.login.model.entity.Post;
 import com.example.login.model.entity.User;

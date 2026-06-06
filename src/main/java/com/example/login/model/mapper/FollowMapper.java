@@ -1,4 +1,4 @@
-package com.example.login.mapper;
+package com.example.login.model.mapper;
 
 import com.example.login.model.entity.Follow;
 import com.example.login.model.response.FollowResponse;
