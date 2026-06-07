@@ -1,6 +1,8 @@
 package com.example.login.model.response;
 
-import com.example.login.model.dto.SatelliteDto;
+import com.example.login.model.dto.ParameterDto;
+import com.example.login.model.dto.TleItemDto;
+import com.example.login.model.dto.ViewDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,8 +17,20 @@ import java.util.List;
 @AllArgsConstructor
 public class TleResponse {
 
-    private Integer totalItems;
+    @JsonProperty("@context")
+    private String context;
 
-    @JsonProperty("member")
-    private List<SatelliteDto> satellites;
+    @JsonProperty("@id")
+    private String id;
+
+    @JsonProperty("@type")
+    private String type;
+
+    private Long totalItems;
+
+    private List<TleItemDto> member;
+
+    private ParameterDto parameters;
+
+    private ViewDto view;
 }

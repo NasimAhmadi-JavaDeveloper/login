@@ -25,11 +25,17 @@ public class SatelliteClient {
                 .retrieve() //dont use direct
                 .onStatus(HttpStatus::is4xxClientError,
                         clientResponse ->
-                                Mono.error(new LogicalException(ExceptionSpec.CLIENT_ERROR)))
+                                Mono.error(new LogicalException(ExceptionSpec.CLIENT_ERROR))
+                )
                 .onStatus(HttpStatus::is5xxServerError,
                         clientResponse ->
-                                Mono.error(new LogicalException(ExceptionSpec.SERVICE_UNAVAILABLE)))
-                .bodyToMono(TleResponse.class)
+                                Mono.error(new LogicalException(ExceptionSpec.SERVICE_UNAVAILABLE))
+                )
+               .bodyToMono(TleResponse.class)
+//                .switchIfEmpty(
+//                        Mono.error(new LogicalException(ExceptionSpec.EMPTY_RESPONSE))
+//                )
+//                .timeout(Duration.ofSeconds(5))
                 .block();
     }
 }

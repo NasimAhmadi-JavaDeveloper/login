@@ -21,4 +21,10 @@ public class WebClientConfig {
                 .build();
     }
 
+    @Bean
+    public WebClient jsonPlaceHolderWebClient(WebClient.Builder builder) {
+        return builder
+                .baseUrl("https://jsonplaceholder.typicode.com")
+                .build();
+    }
 }
