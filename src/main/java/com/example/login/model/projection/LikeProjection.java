@@ -1,4 +1,4 @@
-package com.example.login.model.proj;
+package com.example.login.model.projection;
 
 import com.example.login.model.entity.User;
 
