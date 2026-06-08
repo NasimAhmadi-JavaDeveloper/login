@@ -14,7 +14,7 @@ public class JsonPlaceHolderClient {
     private final WebClient jsonPlaceHolderWebClient;
 
     public PostResponseExt getPost(Long id) {
-        log.info("Calling NASA API");
+        log.info("Json Place Holder API");
         return jsonPlaceHolderWebClient.get()
                 .uri("/posts/{id}", id)
                 .retrieve()

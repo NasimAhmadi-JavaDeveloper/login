@@ -1,7 +1,9 @@
 package com.example.login.service;
 
+import com.example.login.config.bean.AllInternalPostClient;
 import com.example.login.config.bean.JsonPlaceHolderClient;
 import com.example.login.config.bean.SatelliteClient;
+import com.example.login.model.response.PostResponse;
 import com.example.login.model.response.PostResponseExt;
 import com.example.login.model.response.TleResponse;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
@@ -11,13 +13,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ExternalServices {
+public class WebClientService {
 
     private final SatelliteClient satelliteClient;
     private final JsonPlaceHolderClient jsonPlaceHolderClient;
+    private final AllInternalPostClient allInternalPostClient;
 
     @Retry(name = "getAllSatellites")
     @CircuitBreaker(
@@ -46,12 +52,20 @@ public class ExternalServices {
         return jsonPlaceHolderClient.getPost(id);
     }
 
+    @Retry(name = "getAllPosts")
+    @CircuitBreaker(
+            name = "getAllPostsCircuitBreaker",
+            fallbackMethod = "allPostsFallback")
+    public List<PostResponse> getAllPosts() {
+        log.info("calling get All Internal Posts");
+        return allInternalPostClient.getAllInternalPosts();
+    }
+
     private TleResponse satelliteFallback(Throwable throwable) {
         log.error("Satellite API unavailable", throwable);
 
         TleResponse response = new TleResponse();
         response.setTotalItems(0L);
-        //todo
         return response;
     }
 
@@ -64,5 +78,13 @@ public class ExternalServices {
         response.setBody("External service unavailable");
 
         return response;
+    }
+
+    private List<PostResponse> allPostsFallback(Throwable ex) {
+        log.error("getAllPosts fallback triggered due to: {}", ex.getMessage());
+
+        log.error("getAllPosts fallback triggered: {}", ex.getMessage());
+
+        return new ArrayList<>();
     }
 }

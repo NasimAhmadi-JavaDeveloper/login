@@ -8,9 +8,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientConfig {
 
     @Bean
-    public WebClient nasaWebClient() {
+    public WebClient allInternalPost() {
         return WebClient.builder()
-                .baseUrl("https://api.nasa.gov")
+                .baseUrl("http://localhost:8080/api/v1")
                 .build();
     }
 

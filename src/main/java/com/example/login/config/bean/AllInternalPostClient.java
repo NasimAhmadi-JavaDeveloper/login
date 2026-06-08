@@ -2,36 +2,41 @@ package com.example.login.config.bean;
 
 import com.example.login.exception.LogicalException;
 import com.example.login.model.enums.ExceptionSpec;
-import com.example.login.model.response.TleResponse;
+import com.example.login.model.response.PostResponse;
+import com.example.login.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SatelliteClient {
+public class AllInternalPostClient {
 
-    private final WebClient satelliteWebClient;
+    private final WebClient allInternalPost;
 
-    public TleResponse getSatellites() {
-        log.info("Calling Satellites Api");
-        return satelliteWebClient
+    public List<PostResponse> getAllInternalPosts() {
+
+        return allInternalPost
                 .get()
-                .uri("/api/tle")
-                .retrieve() //dont use direct
+                .uri("/post")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + SecurityUtil.getCurrentToken())
+                .retrieve()
                 .onStatus(HttpStatus::is4xxClientError,
                         clientResponse ->
                                 Mono.error(new LogicalException(ExceptionSpec.CLIENT_ERROR))
-                )
-                .onStatus(HttpStatus::is5xxServerError,
+                ).onStatus(HttpStatus::is5xxServerError,
                         clientResponse ->
                                 Mono.error(new LogicalException(ExceptionSpec.SERVICE_UNAVAILABLE))
                 )
-                .bodyToMono(TleResponse.class)
+                .bodyToFlux(PostResponse.class)
+                .collectList()
                 .block();
     }
 }
