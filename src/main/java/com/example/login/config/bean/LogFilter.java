@@ -2,7 +2,7 @@ package com.example.login.config.bean;
 
 
 import com.example.login.model.enums.LogType;
-import com.example.login.model.entity.Log;
+import com.example.login.model.entity.audit.Log;
 import com.example.login.repository.LogRepository;
 import com.example.login.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;

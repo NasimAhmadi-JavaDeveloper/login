@@ -1,6 +1,6 @@
 package com.example.login.model.mapper;
 
-import com.example.login.model.entity.Category;
+import com.example.login.model.entity.shoppingcart.Category;
 import com.example.login.model.request.CategoryRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

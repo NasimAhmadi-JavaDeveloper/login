@@ -1,5 +1,9 @@
-package com.example.login.model.entity;
+package com.example.login.model.entity.user;
 
+import com.example.login.model.entity.BaseEntity;
+import com.example.login.model.entity.socialmedia.Comment;
+import com.example.login.model.entity.socialmedia.Follow;
+import com.example.login.model.entity.socialmedia.Post;
 import com.example.login.model.enums.Role;
 import com.example.login.model.converter.CryptoConverter;
 import lombok.*;

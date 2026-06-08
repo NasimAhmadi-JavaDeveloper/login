@@ -2,7 +2,7 @@
 //
 //import com.example.login.model.enums.ExceptionSpec;
 //import com.example.login.exception.LogicalException;
-//import com.example.login.model.entity.User;
+//import com.example.login.model.entity.user.User;
 //import com.example.login.model.response.LoginResponse;
 //import com.example.login.repository.UserRepository;
 //import com.example.login.security.JWTService;

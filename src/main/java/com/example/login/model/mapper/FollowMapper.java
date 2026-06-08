@@ -1,6 +1,6 @@
 package com.example.login.model.mapper;
 
-import com.example.login.model.entity.Follow;
+import com.example.login.model.entity.socialmedia.Follow;
 import com.example.login.model.response.FollowResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

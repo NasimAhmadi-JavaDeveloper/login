@@ -1,6 +1,6 @@
 package com.example.login.repository;
 
-import com.example.login.model.entity.Comment;
+import com.example.login.model.entity.socialmedia.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

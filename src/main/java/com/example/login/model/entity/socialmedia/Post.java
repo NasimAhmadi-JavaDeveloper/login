@@ -1,6 +1,8 @@
-package com.example.login.model.entity;
+package com.example.login.model.entity.socialmedia;
 
 import com.example.login.model.converter.StringListConverter;
+import com.example.login.model.entity.BaseEntity;
+import com.example.login.model.entity.user.User;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

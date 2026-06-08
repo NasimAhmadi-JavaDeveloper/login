@@ -1,4 +1,4 @@
-package com.example.login.model.entity;
+package com.example.login.model.entity.audit;
 
 
 import com.example.login.model.enums.LogType;

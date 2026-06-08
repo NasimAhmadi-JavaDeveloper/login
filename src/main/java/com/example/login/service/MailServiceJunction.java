@@ -1,6 +1,6 @@
 package com.example.login.service;
 
-import com.example.login.model.entity.Otp;
+import com.example.login.model.entity.user.Otp;
 import com.example.login.repository.OtpRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

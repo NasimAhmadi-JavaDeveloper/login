@@ -1,6 +1,6 @@
 package com.example.login.utils;
 
-import com.example.login.model.entity.Otp;
+import com.example.login.model.entity.user.Otp;
 import com.example.login.security.CustomUserDetails;
 import lombok.experimental.UtilityClass;
 import org.springframework.http.HttpStatus;

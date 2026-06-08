@@ -1,10 +1,9 @@
-package com.example.login.model.entity;
+package com.example.login.model.entity.exam;
 
-import com.example.login.model.enums.Emoji;
+import com.example.login.model.entity.BaseEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -17,24 +16,22 @@ import javax.persistence.*;
 @Setter
 @DynamicInsert
 @DynamicUpdate
-@ToString(of = "id")
+@EqualsAndHashCode(of = "id")
 @Accessors(chain = true)
-@EqualsAndHashCode(of = "id", callSuper = true)
-public class Comment extends BaseEntity {
+public class Option extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+
+    @Column(nullable = false)
+    private String optionName;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Post post;
+    private Question question;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private User user;
+    private Integer optionOrder;
 
-    @Column(length = 200)
-    private String commentText;
+    private Integer grade;
 
-    @Enumerated
-    private Emoji emoji;
 }

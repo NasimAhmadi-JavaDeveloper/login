@@ -1,6 +1,6 @@
 package com.example.login.model.projection;
 
-import com.example.login.model.entity.User;
+import com.example.login.model.entity.user.User;
 
 import java.time.LocalDate;
 

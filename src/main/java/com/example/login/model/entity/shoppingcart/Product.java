@@ -1,5 +1,6 @@
-package com.example.login.model.entity;
+package com.example.login.model.entity.shoppingcart;
 
+import com.example.login.model.entity.BaseEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.List;
+import java.math.BigDecimal;
 
 @Table
 @Entity
@@ -18,7 +19,7 @@ import java.util.List;
 @DynamicUpdate
 @EqualsAndHashCode(of = "id")
 @Accessors(chain = true)
-public class Category extends BaseEntity implements Comparable<Category> {
+public class Product extends BaseEntity implements Comparable<Product> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,17 +28,17 @@ public class Category extends BaseEntity implements Comparable<Category> {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Category parent;
+    @Column(nullable = false)
+    private BigDecimal price;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Category> subcategories;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Inventory inventory;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Category category;
 
     @Override
-    public int compareTo(final Category other) {
+    public int compareTo(final Product other) {
         return Long.compare(this.id, other.id);
     }
 }

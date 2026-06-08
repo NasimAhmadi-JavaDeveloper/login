@@ -1,6 +1,6 @@
 package com.example.login.model.mapper;
 
-import com.example.login.model.entity.Post;
+import com.example.login.model.entity.socialmedia.Post;
 import com.example.login.model.request.PostRequest;
 import com.example.login.model.response.PostResponse;
 import org.mapstruct.Mapper;

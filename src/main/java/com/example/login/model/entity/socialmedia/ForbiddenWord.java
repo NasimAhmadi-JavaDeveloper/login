@@ -1,15 +1,14 @@
-package com.example.login.model.entity;
+package com.example.login.model.entity.socialmedia;
 
+import com.example.login.model.entity.BaseEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Table
 @Entity
@@ -19,19 +18,12 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @EqualsAndHashCode(of = "id")
 @Accessors(chain = true)
-public class Follow {
+public class ForbiddenWord extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(optional = false)
-    private User from;
-
-    @ManyToOne(optional = false)
-    private User to;
-
-    @CreationTimestamp
-    @Column(updatable = false, nullable = false)
-    private LocalDateTime createdAt;
+    @Column(nullable = false, unique = true, length = 100)
+    private String word;
 }

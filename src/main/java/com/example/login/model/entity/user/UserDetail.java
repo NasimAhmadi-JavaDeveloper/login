@@ -1,5 +1,6 @@
-package com.example.login.model.entity;
+package com.example.login.model.entity.user;
 
+import com.example.login.model.entity.BaseEntity;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;

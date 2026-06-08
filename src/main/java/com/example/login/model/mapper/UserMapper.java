@@ -1,6 +1,6 @@
 package com.example.login.model.mapper;
 
-import com.example.login.model.entity.User;
+import com.example.login.model.entity.user.User;
 import com.example.login.model.request.UserRequest;
 import com.example.login.model.response.UserResponse;
 import org.mapstruct.Mapper;

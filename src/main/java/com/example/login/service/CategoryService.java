@@ -3,7 +3,7 @@ package com.example.login.service;
 import com.example.login.model.enums.ExceptionSpec;
 import com.example.login.exception.LogicalException;
 import com.example.login.model.mapper.CategoryMapper;
-import com.example.login.model.entity.Category;
+import com.example.login.model.entity.shoppingcart.Category;
 import com.example.login.model.request.CategoryRequest;
 import com.example.login.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;

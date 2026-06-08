@@ -1,7 +1,7 @@
 package com.example.login.repository;
 
 import com.example.login.model.dto.PostStatsDto;
-import com.example.login.model.entity.Post;
+import com.example.login.model.entity.socialmedia.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

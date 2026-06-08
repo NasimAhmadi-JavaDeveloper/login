@@ -1,6 +1,6 @@
 package com.example.login.model.mapper;
 
-import com.example.login.model.entity.ForbiddenWord;
+import com.example.login.model.entity.socialmedia.ForbiddenWord;
 import com.example.login.model.request.ForbiddenWordRequest;
 import org.mapstruct.Mapper;
 

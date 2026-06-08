@@ -1,5 +1,6 @@
-package com.example.login.model.entity;
+package com.example.login.model.entity.shoppingcart;
 
+import com.example.login.model.entity.BaseEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,23 +19,26 @@ import java.util.List;
 @DynamicUpdate
 @EqualsAndHashCode(of = "id")
 @Accessors(chain = true)
-public class Inventory extends BaseEntity implements Comparable<Inventory> {
+public class Category extends BaseEntity implements Comparable<Category> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
-    private String address;
+    private String name;
 
-    @Column(nullable = false)
-    private Integer stockQuantity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category parent;
 
-    @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Category> subcategories;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products;
 
     @Override
-    public int compareTo(final Inventory other) {
+    public int compareTo(final Category other) {
         return Long.compare(this.id, other.id);
     }
 }
