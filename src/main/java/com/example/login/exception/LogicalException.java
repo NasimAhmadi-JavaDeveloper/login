@@ -1,5 +1,6 @@
 package com.example.login.exception;
 
+import com.example.login.model.enums.ExceptionSpec;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

@@ -1,9 +1,9 @@
 package com.example.login.service;
 
-import com.example.login.exception.ExceptionSpec;
+import com.example.login.model.enums.ExceptionSpec;
 import com.example.login.exception.LogicalException;
-import com.example.login.mapper.ForbiddenWordMapper;
-import com.example.login.model.entity.ForbiddenWord;
+import com.example.login.model.mapper.ForbiddenWordMapper;
+import com.example.login.model.entity.socialmedia.ForbiddenWord;
 import com.example.login.model.request.ForbiddenWordRequest;
 import com.example.login.repository.ForbiddenWordRepository;
 import com.example.login.utils.Utils;

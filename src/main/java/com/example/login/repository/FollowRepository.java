@@ -1,7 +1,7 @@
 package com.example.login.repository;
 
-import com.example.login.model.entity.Follow;
-import com.example.login.model.entity.User;
+import com.example.login.model.entity.socialmedia.Follow;
+import com.example.login.model.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 

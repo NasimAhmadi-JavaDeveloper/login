@@ -1,6 +1,6 @@
 package com.example.login.repository;
 
-import com.example.login.model.entity.ForbiddenWord;
+import com.example.login.model.entity.socialmedia.ForbiddenWord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

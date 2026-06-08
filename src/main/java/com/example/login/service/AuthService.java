@@ -1,8 +1,8 @@
 package com.example.login.service;
 
-import com.example.login.exception.ExceptionSpec;
+import com.example.login.model.enums.ExceptionSpec;
 import com.example.login.exception.LogicalException;
-import com.example.login.model.entity.User;
+import com.example.login.model.entity.user.User;
 import com.example.login.model.response.LoginResponse;
 import com.example.login.security.JWTService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.example.login.repository;
 
-import com.example.login.model.entity.User;
+import com.example.login.model.entity.user.User;
 import com.example.login.model.response.UserReportResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

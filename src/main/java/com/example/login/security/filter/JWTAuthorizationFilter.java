@@ -1,7 +1,7 @@
 package com.example.login.security.filter;
 
-import com.example.login.exception.ExceptionSpec;
 import com.example.login.exception.LogicalException;
+import com.example.login.model.enums.ExceptionSpec;
 import com.example.login.model.response.ErrorResponse;
 import com.example.login.repository.UserDetailRepository;
 import com.example.login.security.CustomUserDetails;
@@ -44,13 +44,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                                     HttpServletResponse res,
                                     FilterChain chain) throws IOException, ServletException {
 
-//        if ("TRACE".equalsIgnoreCase(req.getMethod())
-//                || "TRACK".equalsIgnoreCase(req.getMethod())) {
-//            res.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-//            return;
-//        }
-
         String header = req.getHeader(HEADER_STRING);
+
         if (header != null && header.startsWith(TOKEN_PREFIX)) {
             try {
                 UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
@@ -80,7 +75,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                 throw new LogicalException(ExceptionSpec.USER_ALREADY_BLOCKED);
             }
 
-            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(userDetails, token.replace(TOKEN_PREFIX, ""), userDetails.getAuthorities());
         }
         return null;
     }

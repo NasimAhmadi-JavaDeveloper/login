@@ -32,4 +32,16 @@ public class SecurityUtil {
         }
     }
 
+    public static String getCurrentToken() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null) {
+            return null;
+        }
+
+        Object credentials = authentication.getCredentials();
+
+        return credentials != null ? credentials.toString() : null;
+    }
 }
