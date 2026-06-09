@@ -9,6 +9,7 @@ import org.springframework.core.codec.DecodingException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -85,6 +86,17 @@ public class ExceptionHandling extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(e.getSpecs().getHttpStatus())
                 .body(new ErrorResponse(e.getSpecs().getMessage()));
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<String> handleOptimisticLock(ObjectOptimisticLockingFailureException ex) {
+        Object id = ex.getIdentifier();
+
+        String message = String.format("The record with id %s was updated by another user. Please refresh and try again.", id);
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(message);
     }
 
     private Object mapException(Exception e) {
