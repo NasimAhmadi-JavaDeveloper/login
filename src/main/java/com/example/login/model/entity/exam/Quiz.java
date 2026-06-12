@@ -27,6 +27,9 @@ public class Quiz extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String title;
 
+    @Column(nullable = false)
+    private Integer quizOrder;
+
     //DONE = QUERY USER-QUIZ -> WHEN ALL QUESTIONS OF A QUIZ ID ANSWERED
 //    private boolean done;
 
