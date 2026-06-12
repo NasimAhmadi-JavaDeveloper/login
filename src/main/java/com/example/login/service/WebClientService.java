@@ -12,6 +12,7 @@ import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,7 @@ public class WebClientService {
     @CircuitBreaker(
             name = "getAllPostsCircuitBreaker",
             fallbackMethod = "allPostsFallback")
-    public List<PostResponse> getAllPosts() {
+    public Flux<PostResponse> getAllPosts() {
         log.info("calling get All Internal Posts");
         return allInternalPostClient.getAllInternalPosts();
     }
@@ -80,11 +81,11 @@ public class WebClientService {
         return response;
     }
 
-    private List<PostResponse> allPostsFallback(Throwable ex) {
+    private Flux<PostResponse> allPostsFallback(Throwable ex) {
         log.error("getAllPosts fallback triggered due to: {}", ex.getMessage());
 
         log.error("getAllPosts fallback triggered: {}", ex.getMessage());
 
-        return new ArrayList<>();
+        return Flux.empty();
     }
 }

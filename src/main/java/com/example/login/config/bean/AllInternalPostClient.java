@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class AllInternalPostClient {
 
     private final WebClient allInternalPost;
 
-    public List<PostResponse> getAllInternalPosts() {
+    public Flux<PostResponse> getAllInternalPosts() {
 
         return allInternalPost
                 .get()
@@ -35,8 +36,6 @@ public class AllInternalPostClient {
                         clientResponse ->
                                 Mono.error(new LogicalException(ExceptionSpec.SERVICE_UNAVAILABLE))
                 )
-                .bodyToFlux(PostResponse.class)
-                .collectList()
-                .block();
+                .bodyToFlux(PostResponse.class);
     }
 }
