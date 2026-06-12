@@ -1,6 +1,7 @@
 package com.example.login.model.entity.user;
 
 import com.example.login.model.entity.BaseEntity;
+import com.example.login.model.entity.exam.Quiz;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;
@@ -41,4 +42,6 @@ public class UserDetail extends BaseEntity {
     @MapsId  // Uses User's ID as primary key
     @JoinColumn(name = "id")
     private User user;
+    @ManyToOne
+    private Quiz currentQuiz;
 }
