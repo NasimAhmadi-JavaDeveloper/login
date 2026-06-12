@@ -13,7 +13,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createUser(User user) {
+    public void create(User user) {
         //map to entity -> save via userRepo -> jpaRepo
     }
 }

@@ -29,7 +29,7 @@ public class CreateCustomerCreditHandler implements CreateCustomerCreditUseCase 
     public CreateCustomerCreditResult handle(CreateCustomerCreditCommand command) {
 
         User user = userMapper.toDomainModel(command.getUserCreateCommand());
-        userService.createUser(user);
+        userService.create(user);
 
         Branch branchModel = getBranchModel(command.getUnitCode());// 😂
 
