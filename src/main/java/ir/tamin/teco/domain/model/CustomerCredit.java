@@ -1,6 +1,6 @@
 package ir.tamin.teco.domain.model;
 
-import ir.tamin.teco.domain.model.enums.PersonType;
+import ir.tamin.teco.shared.model.enums.PersonType;
 import lombok.*;
 
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package ir.tamin.teco.domain.model.enums;
+package ir.tamin.teco.shared.model.enums;
 
 import lombok.Getter;
 
