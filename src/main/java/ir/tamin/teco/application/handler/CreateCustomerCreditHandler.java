@@ -5,13 +5,9 @@ import ir.tamin.teco.application.model.mapper.CustomerMapper;
 import ir.tamin.teco.application.model.mapper.UserMapper;
 import ir.tamin.teco.application.model.result.CreateCustomerCreditResult;
 import ir.tamin.teco.application.usecase.CreateCustomerCreditUseCase;
-import ir.tamin.teco.domain.exception.BranchNotFoundException;
-import ir.tamin.teco.domain.model.Branch;
 import ir.tamin.teco.domain.model.CustomerCredit;
 import ir.tamin.teco.domain.model.User;
-import ir.tamin.teco.domain.repository.BranchRepository;
-import ir.tamin.teco.domain.repository.CustomerCreditRepository;
-import ir.tamin.teco.domain.service.UserService;
+import ir.tamin.teco.domain.service.CustomerCreditService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,33 +15,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CreateCustomerCreditHandler implements CreateCustomerCreditUseCase {
 
-    private final UserService userService;
-    private final BranchRepository branchRepository;
-    private final CustomerCreditRepository customerCreditRepository;
     private final CustomerMapper customerMapper;
     private final UserMapper userMapper;
+    private final CustomerCreditService service;
 
     @Override
     public CreateCustomerCreditResult handle(CreateCustomerCreditCommand command) {
 
-        User user = userMapper.toDomainModel(command.getUserCreateCommand());
-        userService.create(user);
-
-        Branch branchModel = getBranchModel(command.getUnitCode());// 😂
-
         CustomerCredit model = customerMapper.toModel(command);
+        User user = userMapper.toDomainModel(command.getUserCreateCommand());
 
-        model.setBranch(branchModel);
+        CustomerCredit result = service.create(model, user, command.getUnitCode());
 
-        CustomerCredit savedModel = customerCreditRepository.save(model);
-
-
-        return customerMapper.toCreateResult(savedModel);
+        return customerMapper.toCreateResult(result);
     }
-
-    private Branch getBranchModel(String unitCode) {
-        return branchRepository.findByCode(unitCode)
-                .orElseThrow(() -> new BranchNotFoundException(unitCode));
-    }
-
 }

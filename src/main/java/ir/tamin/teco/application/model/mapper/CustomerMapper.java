@@ -7,7 +7,7 @@ import ir.tamin.teco.domain.model.CustomerCredit;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface CustomerMapper {
 
     @Mapping(target = "branch", ignore = true)
