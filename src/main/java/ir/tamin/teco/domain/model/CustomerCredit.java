@@ -1,9 +1,6 @@
 package ir.tamin.teco.domain.model;
 
-import ir.tamin.teco.shared.model.enums.PersonType;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -14,7 +11,7 @@ public class CustomerCredit {
 
     private Long id;
 
-    private PersonType personType;
+    private String personType;
 
     private String firstName;
 
@@ -40,18 +37,10 @@ public class CustomerCredit {
 
     private Long discountAmount;
 
-    private String tetaTrackingCode;//TODO ?
+    private String tetaTrackingCode;
 
-    private Long tetaUserId;//TODO ?
+    private Long tetaUserId;
 
-    private String status;//TODO ?
-
-    private LocalDateTime creationDate;//TODO ? base
-
-    private String creationUser;//TODO ? base
-
-    private LocalDateTime modifyDate;//TODO ? base
-
-    private String modifyUser; //TODO ? base
+    private String status;
 
 }

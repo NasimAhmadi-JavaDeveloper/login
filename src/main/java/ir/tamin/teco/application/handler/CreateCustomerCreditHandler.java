@@ -6,7 +6,6 @@ import ir.tamin.teco.application.model.mapper.UserMapper;
 import ir.tamin.teco.application.model.result.CreateCustomerCreditResult;
 import ir.tamin.teco.application.usecase.CreateCustomerCreditUseCase;
 import ir.tamin.teco.domain.model.CustomerCredit;
-import ir.tamin.teco.domain.model.User;
 import ir.tamin.teco.domain.service.CustomerCreditService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,10 +22,13 @@ public class CreateCustomerCreditHandler implements CreateCustomerCreditUseCase 
     public CreateCustomerCreditResult handle(CreateCustomerCreditCommand command) {
 
         CustomerCredit model = customerMapper.toModel(command);
-        User user = userMapper.toDomainModel(command.getUserCreateCommand());
 
-        CustomerCredit result = service.create(model, user, command.getUnitCode());
+        // User user = userMapper.toDomainModel(command.getUserCreateCommand());
 
-        return customerMapper.toCreateResult(result);
+        // CustomerCredit result = service.create(model, user, command.getUnitCode());
+
+        CustomerCredit customerCredit = service.create(model);
+
+        return customerMapper.toCreateResult(customerCredit);
     }
 }

@@ -1,11 +1,13 @@
 package ir.tamin.teco.application.model.command;
 
-import lombok.*;
+import lombok.Value;
 
 @Value
 public class CreateCustomerCreditCommand {
 
-    UserCommand.create userCreateCommand;
+    //UserCommand.create userCreateCommand;
+
+    Long id;
 
     String personType;
 
@@ -23,7 +25,7 @@ public class CreateCustomerCreditCommand {
 
     String phone;
 
-    String unitCode;
+    BranchCommand.create branchCreateCommand;
 
     String accountNo;
 
@@ -32,5 +34,11 @@ public class CreateCustomerCreditCommand {
     Long amount;
 
     Long discountAmount;
+
+    String tetaTrackingCode;
+
+    Long tetaUserId;
+
+    String status;
 
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/customer-credits")
+@RequestMapping("/customer-credit")
 public class CustomerCreditController {
 
     private final CustomerCreditWebMapper webMapper;

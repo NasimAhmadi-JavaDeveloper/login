@@ -3,8 +3,6 @@ package ir.tamin.teco.infrastructure.persistence.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
-
 @Entity
 @Builder
 @Getter
@@ -12,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "TBL_CUSTOMER_CREDIT")
-public class CustomerCreditEntity {
+public class CustomerCreditEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customerCreditSeq")
@@ -22,7 +20,7 @@ public class CustomerCreditEntity {
 
     @Basic
     @Column(name = "PERSON_TYPE", nullable = false, length = 50)
-    private String personType;//TODO Enum
+    private String personType;//TODO Enum?
 
     @Basic
     @Column(name = "FIRST_NAME", nullable = false, length = 100)
@@ -53,8 +51,8 @@ public class CustomerCreditEntity {
     private String phone;
 
     @ManyToOne
-    @JoinColumn(name = "UNIT_CODE", referencedColumnName = "BRHCODE")
-    private BranchEntity unitCode;//TODO?? nullable
+    @JoinColumn(name = "BRHCODE", referencedColumnName = "BRHCODE")
+    private BranchEntity branchEntity;//TODO?? nullable
 
     @Basic
     @Column(name = "ACCOUNT_NO", length = 200)
@@ -84,20 +82,20 @@ public class CustomerCreditEntity {
     @Column(name = "STATUS", length = 50)
     private String status;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATION_DATE")
-    private Date creationDate;
-
-    @Basic
-    @Column(name = "CREATION_USER", length = 10)
-    private String creationUser;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFY_DATE")
-    private Date modifyDate;
-
-    @Basic
-    @Column(name = "MODIFY_USER", length = 10)
-    private String modifyUser;
+//    @Temporal(TemporalType.TIMESTAMP)
+//    @Column(name = "CREATION_DATE")
+//    private Date createdAt;
+//
+//    @Basic
+//    @Column(name = "CREATION_USER", length = 10)
+//    private String creationUser; //TODO??
+//
+//    @Temporal(TemporalType.TIMESTAMP)
+//    @Column(name = "MODIFY_DATE")
+//    private Date modifyDate;
+//
+//    @Basic
+//    @Column(name = "MODIFY_USER", length = 10)
+//    private String modifyUser;
 
 }
