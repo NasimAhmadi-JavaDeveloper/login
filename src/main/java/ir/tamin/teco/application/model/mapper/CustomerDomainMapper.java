@@ -15,7 +15,7 @@ public interface CustomerDomainMapper {
     @Mapping(target = "branch", ignore = true)
     CustomerCredit toModel(CreateCustomerCreditCommand command);
 
-      CreateCustomerCreditResult toCreateResult(CustomerCredit model, final Branch branch);
+         CreateCustomerCreditResult toCreateResult(CustomerCredit model, final Branch branch);
 
     @Mapping(target = "s", ignore = true)
     GetCustomerCreditResult toGetResult(CustomerCredit model);
