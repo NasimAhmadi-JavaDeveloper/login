@@ -14,8 +14,8 @@ public class BranchServiceImpl implements BranchService {
     private final BranchRepository branchRepository;
 
     @Override
-    public Branch getBranchModel(String unitCode) {
+    public Branch getOrCreateBranchModel(String unitCode) {
         return branchRepository.findByCode(unitCode)
-                .orElseThrow(() -> new BranchNotFoundException(unitCode));
+                .orElseGet(() -> branchRepository.save(Branch.fromCode(unitCode)));
     }
 }

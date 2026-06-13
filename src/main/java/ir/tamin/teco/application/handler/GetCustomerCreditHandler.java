@@ -1,6 +1,6 @@
 package ir.tamin.teco.application.handler;
 
-import ir.tamin.teco.application.model.mapper.CustomerMapper;
+import ir.tamin.teco.application.model.mapper.CustomerDomainMapper;
 import ir.tamin.teco.application.model.result.GetCustomerCreditResult;
 import ir.tamin.teco.application.usecase.GetCustomerCreditUseCase;
 import ir.tamin.teco.domain.exception.CustomerCreditNotFoundException;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class GetCustomerCreditHandler implements GetCustomerCreditUseCase {
 
     private final CustomerCreditRepository customerCreditRepository;
-    private final CustomerMapper customerMapper;
+    private final CustomerDomainMapper customerMapper;
 
     @Override
     public GetCustomerCreditResult handle(Long id) {

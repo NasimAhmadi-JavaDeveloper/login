@@ -15,4 +15,7 @@ public class Branch {
 
     private String brhKind;
 
+  public static Branch fromCode(final String unitCode) {
+    return Branch.builder().brhCode(unitCode).build();
+  }
 }

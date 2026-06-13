@@ -8,4 +8,6 @@ public interface BranchRepository {
 
     Optional<Branch> findByCode(String code);
 
+    Branch save(Branch branch);
+
 }

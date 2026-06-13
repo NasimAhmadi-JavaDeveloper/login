@@ -2,6 +2,7 @@ package ir.tamin.teco.infrastructure.persistence.repository.impl;
 
 import ir.tamin.teco.domain.model.Branch;
 import ir.tamin.teco.domain.repository.BranchRepository;
+import ir.tamin.teco.infrastructure.persistence.entity.BranchEntity;
 import ir.tamin.teco.infrastructure.persistence.mapper.BranchPersistenceMapper;
 import ir.tamin.teco.infrastructure.persistence.repository.jpa.JpaBranchRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,4 +21,11 @@ public class BranchRepositoryImpl implements BranchRepository {
     public Optional<Branch> findByCode(String code) {
         return jpaBranchRepository.findByBrhCode(code).map(branchPersistenceMapper::toDomain);
     }
+
+  @Override
+  public Branch save(final Branch branch) {
+    final BranchEntity entity = branchPersistenceMapper.toEntity(branch);
+    final BranchEntity saved = jpaBranchRepository.save(entity);
+    return branchPersistenceMapper.toDomain(saved);
+  }
 }
