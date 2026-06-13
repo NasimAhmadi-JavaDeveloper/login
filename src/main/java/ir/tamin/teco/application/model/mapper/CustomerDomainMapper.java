@@ -12,11 +12,10 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.ERROR, uses = {UserDomainMapper.class, BranchDomainMapper.class})
 public interface CustomerDomainMapper {
 
-    //@Mapping(target = "branch", ignore = true)
     @Mapping(target = "branch", ignore = true)
     CustomerCredit toModel(CreateCustomerCreditCommand command);
 
-    CreateCustomerCreditResult toCreateResult(CustomerCredit model, final Branch branch);
+      CreateCustomerCreditResult toCreateResult(CustomerCredit model, final Branch branch);
 
     @Mapping(target = "s", ignore = true)
     GetCustomerCreditResult toGetResult(CustomerCredit model);

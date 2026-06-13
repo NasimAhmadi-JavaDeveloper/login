@@ -1,6 +1,5 @@
 package ir.tamin.teco.application.service;
 
-import ir.tamin.teco.domain.exception.BranchNotFoundException;
 import ir.tamin.teco.domain.model.Branch;
 import ir.tamin.teco.domain.repository.BranchRepository;
 import ir.tamin.teco.domain.service.BranchService;

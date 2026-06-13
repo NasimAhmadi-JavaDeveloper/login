@@ -16,22 +16,18 @@ import org.springframework.stereotype.Service;
 public class CreateCustomerCreditHandler implements CreateCustomerCreditUseCase {
 
     private final CustomerDomainMapper customerMapper;
-//    private final UserMapper userMapper;
     private final CustomerCreditService service;
     private final BranchService branchService;
 
     @Override
-    public CreateCustomerCreditResult handle(CreateCustomerCreditCommand command) {
+     public CreateCustomerCreditResult handle(CreateCustomerCreditCommand command) {
 
-      CustomerCredit model = customerMapper.toModel(command);
+         CustomerCredit model = customerMapper.toModel(command);
 
-      //we can send whole branch command, but your code only includes BRH-CODE
-      final Branch branchModel = branchService.getOrCreateBranchModel(command.getBranchCreateCommand().brhCode());
-        // User user = userMapper.toDomainModel(command.getUserCreateCommand());
+        //we can send whole branch command, but your code only includes BRH-CODE
+          final Branch branchModel = branchService.getOrCreateBranchModel(command.getBranchCreateCommand().brhCode());
 
-        // CustomerCredit result = service.create(model, user, command.getUnitCode());
-
-        CustomerCredit customerCredit = service.create(model);
+         CustomerCredit customerCredit = service.create(model);
 
         return customerMapper.toCreateResult(customerCredit, branchModel);
     }
