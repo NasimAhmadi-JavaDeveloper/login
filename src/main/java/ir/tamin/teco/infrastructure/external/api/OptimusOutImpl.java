@@ -8,7 +8,6 @@ import ir.tamin.teco.infrastructure.external.model.requrst.OptimusServiceLoginRe
 import ir.tamin.teco.infrastructure.external.model.response.OptimusServiceLoginResponse;
 import ir.tamin.teco.shared.model.enums.ConfigKey;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,52 +20,51 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class OptimusOutImpl implements OptimusOut {
 
-    private final RestTemplate restTemplate;
-    private final ConfigService configService;
+  private final RestTemplate restTemplate;
+  private final ConfigService configService;
 
-    @Override
-    @Cacheable("optimusServiceToken")
-    public String getServiceToken() {
+  @Override
+  public OptimusServiceLoginResponse login() {
 
-        final String baseUrl = configService.getString(ConfigKey.OPTIMUS_BASE_URL);
-        final String authUrl = configService.getString(ConfigKey.OPTIMUS_AUTH_URL);
-        final String url = baseUrl + authUrl;
-        final String username = configService.getString(ConfigKey.OPTIMUS_USERNAME);
-        final String password = configService.getString(ConfigKey.OPTIMUS_PASSWORD);
-        final String appKey = configService.getString(ConfigKey.OPTIMUS_APP_KEY);
-        final String service = configService.getString(ConfigKey.OPTIMUS_SERVICE_NAME);
+    final String baseUrl = configService.getString(ConfigKey.OPTIMUS_BASE_URL);
+    final String authUrl = configService.getString(ConfigKey.OPTIMUS_AUTH_URL);
+    final String url = baseUrl + authUrl;
+    final String username = configService.getString(ConfigKey.OPTIMUS_USERNAME);
+    final String password = configService.getString(ConfigKey.OPTIMUS_PASSWORD);
+    final String appKey = configService.getString(ConfigKey.OPTIMUS_APP_KEY);
+    final String service = configService.getString(ConfigKey.OPTIMUS_SERVICE_NAME);
 
-        OptimusServiceLoginRequest request =
-                new OptimusServiceLoginRequest()
-                        .setUrl(url)
-                        .setUsername(username)
-                        .setPassword(password)
-                        .setAppKey(appKey)
-                        .setService(service);
+    OptimusServiceLoginRequest request =
+        new OptimusServiceLoginRequest()
+            .setUrl(url)
+            .setUsername(username)
+            .setPassword(password)
+            .setAppKey(appKey)
+            .setService(service);
 
-        //MAYBE HEADERS NEEDED?
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<OptimusServiceLoginRequest> requestEntity = new HttpEntity<>(request, headers);
+    //MAYBE HEADERS NEEDED?
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    HttpEntity<OptimusServiceLoginRequest> requestEntity = new HttpEntity<>(request, headers);
 
-        final ResponseEntity<OptimusServiceLoginResponse> response =
-                restTemplate.postForEntity(url, requestEntity, OptimusServiceLoginResponse.class);
+    final ResponseEntity<OptimusServiceLoginResponse> response =
+        restTemplate.postForEntity(url, requestEntity, OptimusServiceLoginResponse.class);
 
-        if (response.getBody() == null) {
-            throw new OptimusServiceUnavailableException("Optimus returned empty response");//TODO Advice
-        }
-
-        if (response.getStatusCode() != HttpStatus.OK) {
-            throw new OptimusAuthenticationException("Optimus authentication failed. HTTP status: " + response.getStatusCode());//TODO Advice
-        }
-
-        OptimusServiceLoginResponse body = response.getBody();
-
-        if (body.result() == null || body.result().token() == null) {
-            throw new OptimusAuthenticationException("Optimus token is missing in response");//TODO Advice
-        }
-
-        return body.result().token();
-
+    if (response.getBody() == null) {
+      throw new OptimusServiceUnavailableException("Optimus returned empty response");//TODO Advice
     }
+
+    if (response.getStatusCode() != HttpStatus.OK) {
+      throw new OptimusAuthenticationException(
+          "Optimus authentication failed. HTTP status: " + response.getStatusCode());//TODO Advice
+    }
+
+    OptimusServiceLoginResponse body = response.getBody();
+
+    if (body.result() == null || body.result().token() == null) {
+      throw new OptimusAuthenticationException("Optimus token is missing in response");//TODO Advice
+    }
+
+    return body;
+  }
 }

@@ -4,6 +4,6 @@ import ir.tamin.teco.application.result.ServiceTokenResult;
 
 public interface ServiceTokenService {
 
-    ServiceTokenResult login();
+    String getServiceToken();
 
 }

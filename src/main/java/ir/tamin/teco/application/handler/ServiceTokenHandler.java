@@ -15,6 +15,6 @@ public class ServiceTokenHandler implements GetServiceTokenUseCase {
 
     @Override
     public ServiceTokenResult handle() {
-        return serviceToken.login();
+        return new ServiceTokenResult(serviceToken.getServiceToken());
     }
 }
