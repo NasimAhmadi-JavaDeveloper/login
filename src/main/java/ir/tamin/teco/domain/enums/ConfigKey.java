@@ -1,4 +1,4 @@
-package ir.tamin.teco.shared.model.enums;
+package ir.tamin.teco.domain.enums;
 
 public enum ConfigKey {
     OPTIMUS_BASE_URL,

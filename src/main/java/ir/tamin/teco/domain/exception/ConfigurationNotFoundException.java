@@ -1,6 +1,6 @@
 package ir.tamin.teco.domain.exception;
 
-import ir.tamin.teco.shared.model.enums.ConfigKey;
+import ir.tamin.teco.domain.enums.ConfigKey;
 
 public class ConfigurationNotFoundException extends RuntimeException {
     public ConfigurationNotFoundException(ConfigKey key) {

@@ -6,7 +6,7 @@ import ir.tamin.teco.domain.exception.OptimusServiceUnavailableException;
 import ir.tamin.teco.application.port.in.ConfigService;
 import ir.tamin.teco.infrastructure.external.optimus.model.request.OptimusServiceLoginRequest;
 import ir.tamin.teco.infrastructure.external.optimus.model.response.OptimusServiceLoginResponse;
-import ir.tamin.teco.shared.model.enums.ConfigKey;
+import ir.tamin.teco.domain.enums.ConfigKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

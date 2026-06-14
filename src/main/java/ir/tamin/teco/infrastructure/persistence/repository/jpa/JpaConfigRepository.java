@@ -1,7 +1,7 @@
 package ir.tamin.teco.infrastructure.persistence.repository.jpa;
 
 import ir.tamin.teco.infrastructure.persistence.entity.ConfigEntity;
-import ir.tamin.teco.shared.model.enums.ConfigKey;
+import ir.tamin.teco.domain.enums.ConfigKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

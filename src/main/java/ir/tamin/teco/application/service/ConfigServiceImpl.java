@@ -2,7 +2,7 @@ package ir.tamin.teco.application.service;
 
 import ir.tamin.teco.application.port.out.ConfigRepository;
 import ir.tamin.teco.application.port.in.ConfigService;
-import ir.tamin.teco.shared.model.enums.ConfigKey;
+import ir.tamin.teco.domain.enums.ConfigKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

@@ -4,7 +4,7 @@ import ir.tamin.teco.domain.exception.ConfigurationNotFoundException;
 import ir.tamin.teco.application.port.out.ConfigRepository;
 import ir.tamin.teco.infrastructure.persistence.entity.ConfigEntity;
 import ir.tamin.teco.infrastructure.persistence.repository.jpa.JpaConfigRepository;
-import ir.tamin.teco.shared.model.enums.ConfigKey;
+import ir.tamin.teco.domain.enums.ConfigKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

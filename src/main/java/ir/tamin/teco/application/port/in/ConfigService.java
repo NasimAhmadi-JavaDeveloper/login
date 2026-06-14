@@ -1,6 +1,6 @@
 package ir.tamin.teco.application.port.in;
 
-import ir.tamin.teco.shared.model.enums.ConfigKey;
+import ir.tamin.teco.domain.enums.ConfigKey;
 
 public interface ConfigService {
 
