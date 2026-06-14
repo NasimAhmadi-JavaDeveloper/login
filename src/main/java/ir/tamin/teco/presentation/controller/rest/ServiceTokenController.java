@@ -1,7 +1,7 @@
 package ir.tamin.teco.presentation.controller.rest;
 
-import ir.tamin.teco.application.result.ServiceTokenResult;
-import ir.tamin.teco.application.usecase.GetServiceTokenUseCase;
+import ir.tamin.teco.application.model.result.ServiceTokenResult;
+import ir.tamin.teco.application.port.in.GetServiceTokenUseCase;
 import ir.tamin.teco.presentation.model.mapper.ServiceTokenWebMapper;
 import ir.tamin.teco.presentation.model.response.ServiceTokenResponse;
 import lombok.RequiredArgsConstructor;

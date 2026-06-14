@@ -1,4 +1,4 @@
-package ir.tamin.teco.infrastructure.external.model.requrst;
+package ir.tamin.teco.infrastructure.external.optimus.model.request;
 
 import lombok.AccessLevel;
 import lombok.Data;

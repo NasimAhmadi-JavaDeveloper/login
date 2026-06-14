@@ -1,7 +1,7 @@
-package ir.tamin.teco.infrastructure.persistence.repository.impl;
+package ir.tamin.teco.infrastructure.persistence.repository.adapter;
 
 import ir.tamin.teco.domain.exception.ConfigurationNotFoundException;
-import ir.tamin.teco.domain.repository.ConfigRepository;
+import ir.tamin.teco.application.port.out.ConfigRepository;
 import ir.tamin.teco.infrastructure.persistence.entity.ConfigEntity;
 import ir.tamin.teco.infrastructure.persistence.repository.jpa.JpaConfigRepository;
 import ir.tamin.teco.shared.model.enums.ConfigKey;

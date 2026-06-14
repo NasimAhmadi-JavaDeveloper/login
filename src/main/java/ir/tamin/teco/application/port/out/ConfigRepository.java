@@ -1,4 +1,4 @@
-package ir.tamin.teco.domain.repository;
+package ir.tamin.teco.application.port.out;
 
 import ir.tamin.teco.shared.model.enums.ConfigKey;
 

@@ -1,4 +1,4 @@
-package ir.tamin.teco.infrastructure.external.model.response;
+package ir.tamin.teco.infrastructure.external.optimus.model.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

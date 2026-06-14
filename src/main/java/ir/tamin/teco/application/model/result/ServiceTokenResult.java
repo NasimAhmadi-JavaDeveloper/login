@@ -1,4 +1,4 @@
-package ir.tamin.teco.application.result;
+package ir.tamin.teco.application.model.result;
 
 public record ServiceTokenResult(String token) {
 
