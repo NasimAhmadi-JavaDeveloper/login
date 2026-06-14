@@ -15,6 +15,7 @@ public class ConfigRepositoryImpl implements ConfigRepository {
 
     private final JpaConfigRepository jpaConfigRepository;
 
+    //WE CAN MOVE CACHE TO SERVICE ON ALL METHODS
     @Cacheable("config")
     public String getValue(ConfigKey key) {
         return jpaConfigRepository.findByKey(key)

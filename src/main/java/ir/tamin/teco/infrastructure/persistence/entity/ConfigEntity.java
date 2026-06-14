@@ -27,7 +27,7 @@ public class ConfigEntity {
     private ConfigKey key;
 
     @Lob
-    @Column(name = "VALUE", nullable = false)
+    @Column(name = "VALUE")
     private String value;
 
 }
