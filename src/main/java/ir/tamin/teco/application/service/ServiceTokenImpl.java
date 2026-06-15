@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ServiceTokenHandler implements ServiceTokenService {
+public class ServiceTokenImpl implements ServiceTokenService {
 
   private final OptimusOut optimusOut;
 
