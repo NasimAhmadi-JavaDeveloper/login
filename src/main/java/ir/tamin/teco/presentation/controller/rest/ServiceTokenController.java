@@ -21,7 +21,7 @@ public class ServiceTokenController {
     @GetMapping
     public ResponseEntity<ServiceTokenResponse> getToken() {
 
-        ServiceTokenResult result = serviceTokenUseCase.handle();
+        ServiceTokenResult result = serviceTokenUseCase.getServiceToken();
 
         return ResponseEntity.ok(serviceTokenWebMapper.toResponse(result));
     }
