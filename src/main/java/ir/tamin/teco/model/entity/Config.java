@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Table(name = "CONFIG")
-public class ConfigEntity {
+public class Config {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "config_seq")

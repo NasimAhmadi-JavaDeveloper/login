@@ -1,7 +1,8 @@
 package ir.tamin.teco.service;
 
-import ir.tamin.teco.application.port.out.ConfigRepository;
+import ir.tamin.teco.controller.exception.ConfigurationNotFoundException;
 import ir.tamin.teco.model.enums.ConfigKey;
+import ir.tamin.teco.repository.JpaConfigRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -11,13 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ConfigService {
 
-  private final ConfigRepository configRepository;
-
+  private final JpaConfigRepository configRepository;
 
   @Cacheable("config")
   @Transactional(readOnly = true)
   public String getString(ConfigKey key) {
-    return configRepository.getValue(key);
+    return configRepository.findByKey(key)
+        .orElseThrow(() -> new ConfigurationNotFoundException(key))
+        .getValue();
   }
 
   @Cacheable("config")
@@ -31,5 +33,4 @@ public class ConfigService {
   public boolean getBoolean(ConfigKey key) {
     return Boolean.parseBoolean(getString(key));//TODO
   }
-
 }

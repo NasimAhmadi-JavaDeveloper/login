@@ -1,8 +1,7 @@
 package ir.tamin.teco.controller.rest;
 
-import ir.tamin.teco.application.port.in.ServiceTokenService;
-import ir.tamin.teco.model.mapper.ServiceTokenWebMapper;
-import ir.tamin.teco.presentation.model.response.ServiceTokenResponse;
+import ir.tamin.teco.model.dto.ResServiceToken;
+import ir.tamin.teco.service.optimus.OptimusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/service-token")
 public class ServiceTokenController {
 
-    private final ServiceTokenService serviceTokenUseCase;
-    private final ServiceTokenWebMapper serviceTokenWebMapper;
+  private final OptimusService optimusService;
 
-    @GetMapping
-    public ResponseEntity<ServiceTokenResponse> getToken() {
+  @GetMapping
+  public ResponseEntity<ResServiceToken> getToken() {
 
-        ServiceTokenResult result = serviceTokenUseCase.getServiceToken();
-
-        return ResponseEntity.ok(serviceTokenWebMapper.toResponse(result));
-    }
-
+    return ResponseEntity.ok(optimusService.getServiceToken());
+  }
 }

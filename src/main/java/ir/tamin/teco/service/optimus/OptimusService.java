@@ -1,12 +1,12 @@
 package ir.tamin.teco.service.optimus;
 
-import ir.tamin.teco.application.port.out.OptimusOut;
-import ir.tamin.teco.service.ConfigService;
 import ir.tamin.teco.controller.exception.OptimusAuthenticationException;
 import ir.tamin.teco.controller.exception.OptimusServiceUnavailableException;
-import ir.tamin.teco.service.optimus.model.request.OptimusServiceLoginRequest;
 import ir.tamin.teco.infrastructure.external.optimus.model.response.OptimusServiceLoginResponse;
+import ir.tamin.teco.model.dto.ResServiceToken;
 import ir.tamin.teco.model.enums.ConfigKey;
+import ir.tamin.teco.service.ConfigService;
+import ir.tamin.teco.service.optimus.model.request.OptimusServiceLoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,12 +18,11 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
-public class OptimusOutImpl implements OptimusOut {
+public class OptimusService {
 
   private final RestTemplate restTemplate;
   private final ConfigService configService;
 
-  @Override
   public OptimusServiceLoginResponse login() {
 
     final String baseUrl = configService.getString(ConfigKey.OPTIMUS_BASE_URL);
@@ -66,5 +65,9 @@ public class OptimusOutImpl implements OptimusOut {
     }
 
     return body;
+  }
+
+  public ResServiceToken getServiceToken() {
+    return new ResServiceToken(login().result().token());
   }
 }
