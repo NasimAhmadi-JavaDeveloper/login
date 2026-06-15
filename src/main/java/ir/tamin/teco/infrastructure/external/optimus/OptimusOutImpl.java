@@ -1,9 +1,9 @@
 package ir.tamin.teco.infrastructure.external.optimus;
 
 import ir.tamin.teco.application.port.out.OptimusOut;
+import ir.tamin.teco.application.service.ConfigService;
 import ir.tamin.teco.domain.exception.OptimusAuthenticationException;
 import ir.tamin.teco.domain.exception.OptimusServiceUnavailableException;
-import ir.tamin.teco.application.port.in.ConfigService;
 import ir.tamin.teco.infrastructure.external.optimus.model.request.OptimusServiceLoginRequest;
 import ir.tamin.teco.infrastructure.external.optimus.model.response.OptimusServiceLoginResponse;
 import ir.tamin.teco.domain.enums.ConfigKey;
